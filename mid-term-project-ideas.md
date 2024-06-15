@@ -106,8 +106,6 @@ To determine the best classification model by comparing the performance of k-Nea
 
 ### Example Comparison
 
-**Dataset**: Iris (from scikit-learn)
-
 | Model                       | Optimal Hyperparameters                  | Accuracy | Precision | Recall | F1 Score |
 |-----------------------------|------------------------------------------|----------|-----------|--------|----------|
 | k-Nearest Neighbors (kNN)   | k=5, metric=euclidean                    | 97%      | 96%       | 97%    | 96%      |
@@ -214,8 +212,6 @@ To compare the performance of different classification algorithms on an imbalanc
    - List any academic works or resources referred to in the report.
 
 ### Example Comparison
-
-**Dataset**: Breast Cancer (from scikit-learn)
 
 | Model                       | Optimal Hyperparameters                  | Accuracy | Precision | Recall | F1 Score |
 |-----------------------------|------------------------------------------|----------|-----------|--------|----------|
@@ -325,8 +321,6 @@ To assess the impact of different feature selection techniques, including PCA (P
    - List any academic works or resources referred to in the report.
 
 ### Example Comparison
-
-**Dataset**: Wine (from scikit-learn)
 
 | Model                       | Feature Selection Technique | Optimal Hyperparameters                  | Accuracy | Precision | Recall | F1 Score |
 |-----------------------------|-----------------------------|------------------------------------------|----------|-----------|--------|----------|
@@ -439,9 +433,7 @@ To determine the best classification model by comparing the performance of k-Nea
 
 ### Example Comparison
 
-**Dataset**: Iris (from scikit-learn)
-
-| Model                       | Dataset Version         | Optimal Hyperparameters                  | Accuracy | Precision | Recall | F1 Score |
+| Model                       | Features                | Optimal Hyperparameters                  | Accuracy | Precision | Recall | F1 Score |
 |-----------------------------|-------------------------|------------------------------------------|----------|-----------|--------|----------|
 | k-Nearest Neighbors (kNN)   | Original                | k=5, metric=euclidean                    | 97%      | 96%       | 97%    | 96%      |
 | k-Nearest Neighbors (kNN)   | PCA-Reduced             | k=5, metric=euclidean                    | 94%      | 93%       | 94%    | 93%      |
