@@ -1,3 +1,5 @@
+---
+
 ### Summary Table of Project Ideas
 
 | Project Idea | Aim | Alignment with Coursework | Algorithms Implemented from Scratch | Algorithms from scikit-learn |
