@@ -1,4 +1,4 @@
-## **Note 3: K-Nearest Neighbours Regression**
+## **K-Nearest Neighbours Regression**
 
 **Predicting the Unknown with Familiar Patterns**
 
