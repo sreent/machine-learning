@@ -1,4 +1,4 @@
-## **Chapter 1: Machine Learning: An Introduction**
+## **Machine Learning: An Introduction**
 
 **Why Machine Learning?**
 
