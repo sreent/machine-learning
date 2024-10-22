@@ -1,10 +1,10 @@
 ## **K-Nearest Neighbours Regression**
 
-**Personalizing Health Guidance**
+**Predicting House Prices**
 
-Imagine you are developing a health app tasked with estimating an individual's daily nutritional needs. You don’t have a complex algorithm at hand, but you do have access to health profiles of other app users who have similar physical attributes and activity levels. Intuitively, you might guess that the nutritional needs of the individual in question should be similar to those of their "neighbors" in the dataset. This is the essence of K-Nearest Neighbours (KNN) Regression: making predictions based on the known outcomes of the closest examples.
+Imagine you're tasked with estimating the price of a house. You don’t have a complex algorithm at hand, but you do have access to the prices of nearby houses that are similar in size, age, and number of rooms. Intuitively, you might guess that the price of the house in question should be similar to those of its "neighbors" in the dataset. This is the essence of K-Nearest Neighbours (KNN) Regression: making predictions based on the known outcomes of the closest examples.
 
-KNN Regression is one of the most intuitive machine learning algorithms. Unlike traditional regression models that try to fit a global equation to the entire dataset, KNN makes predictions by looking at the 'k' nearest neighbors to a new data point and averaging their nutritional requirements. It’s like taking advice from peers who have faced similar health scenarios to make informed nutritional decisions. Simple, yet surprisingly effective in many scenarios.
+KNN Regression is one of the most intuitive machine learning algorithms. Unlike traditional regression models that try to fit a global equation to the entire dataset, KNN makes predictions by looking at the 'k' nearest neighbors to a new data point and averaging their house prices. It’s like asking the neighbors to estimate a house’s value based on their own experiences. Simple, yet surprisingly effective in many scenarios.
 
 **How It Works**
 
