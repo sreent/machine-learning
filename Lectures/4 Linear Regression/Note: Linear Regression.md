@@ -24,14 +24,14 @@ Where:
 
 As the delivery app becomes more sophisticated, you want to add other features to your prediction model, such as the day of the week or traffic conditions. Now the model can no longer be represented by a simple line. Instead, we move to a matrix representation to handle multiple features:
 
-\[
+$$
 \mathbf{y} = \mathbf{X} \beta + \epsilon
-\]
+$$
 
 Where:
 - \(\mathbf{y}\) represents the observed delivery times,
 - \(\mathbf{X}\) contains all the features (distance, day of the week, traffic, etc.),
-- \(\vec{w}) represents the weights or coefficients that the model learns,
+- $$\vec{w}$$ represents the weights or coefficients that the model learns,
 - \(\epsilon\) is the error term, accounting for the difference between actual and predicted delivery times.
 
 **Finding the Best Line**
@@ -40,9 +40,9 @@ The goal of linear regression is to find the line (or plane, in higher dimension
 
 To find the weights (or coefficients) that minimize this error, we use a closed-form solution known as the **Normal Equation**:
 
-\[
+$$
 \vec{w} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}
-\]
+$$
 
 **Understanding Error and Residuals**
 
@@ -50,11 +50,11 @@ In linear regression, the difference between the observed value and the predicte
 
 The formula for **Mean Squared Error (MSE)**, a commonly used metric to evaluate the model, is:
 
-\[
+$$
 MSE = \frac{1}{N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2
-\]
+$$
 
-Where \(y_i\) represents the actual values, and \(\hat{y}_i\) are the predicted values.
+Where $$y_i$$ represents the actual values, and \(\hat{y}_i\) are the predicted values.
 
 **Feature Scaling and Outliers**
 
