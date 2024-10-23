@@ -25,7 +25,7 @@ Where:
 As the delivery app becomes more sophisticated, you want to add other features to your prediction model, such as the day of the week or traffic conditions. Now the model can no longer be represented by a simple line. Instead, we move to a matrix representation to handle multiple features:
 
 $$
-\mathbf{y} = \mathbf{X} \beta + \epsilon
+\mathbf{y} = \mathbf{X} \vec{w} + \epsilon
 $$
 
 Where:
