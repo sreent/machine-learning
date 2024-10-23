@@ -10,9 +10,9 @@ Linear regression is one of the simplest yet most powerful tools in machine lear
 
 Linear regression works by fitting a **straight line** through the data points that best represents the underlying trend. Mathematically, this line is expressed as:
 
-$
+$$
 y = mx + c
-$
+$$
 
 Where:
 - \(y\) is the delivery time (what we want to predict),
