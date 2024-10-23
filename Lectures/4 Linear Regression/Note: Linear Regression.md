@@ -15,10 +15,10 @@ y = mx + c
 $$
 
 Where:
-- \(y\) is the delivery time (what we want to predict),
-- \(x\) is the distance (the feature),
-- \(m\) is the slope of the line (how much delivery time changes with distance),
-- \(c\) is the intercept (the delivery time when the distance is zero).
+- $$y$$ is the delivery time (what we want to predict),
+- $$x$$ is the distance (the feature),
+- $$m$$ is the slope of the line (how much delivery time changes with distance),
+- $$c$$ is the intercept (the delivery time when the distance is zero).
 
 **From Simple Equations to Matrix Representation**
 
@@ -29,10 +29,10 @@ $$
 $$
 
 Where:
-- \(\mathbf{y}\) represents the observed delivery times,
-- \(\mathbf{X}\) contains all the features (distance, day of the week, traffic, etc.),
+- $$\mathbf{y}$$ represents the observed delivery times,
+- $$\mathbf{X}$$ contains all the features (distance, day of the week, traffic, etc.),
 - $$\vec{w}$$ represents the weights or coefficients that the model learns,
-- \(\epsilon\) is the error term, accounting for the difference between actual and predicted delivery times.
+- $$\epsilon$$ is the error term, accounting for the difference between actual and predicted delivery times.
 
 **Finding the Best Line**
 
@@ -54,7 +54,7 @@ $$
 MSE = \frac{1}{N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2
 $$
 
-Where $$y_i$$ represents the actual values, and \(\hat{y}_i\) are the predicted values.
+Where $$y_i$$ represents the actual values, and $$\hat{y}_i$$ are the predicted values.
 
 **Feature Scaling and Outliers**
 
