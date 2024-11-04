@@ -16,7 +16,7 @@ $$
 \sigma(z) = \frac{1}{1 + e^{-z}}
 $$
 
-where $ z = w \cdot x + b $:
+where $$z = w \cdot x + b$$:
 - $w$ represents the weights for each feature,
 - $x$ represents the input features (e.g., vehicle age, service frequency),
 - $b$ is the bias term.
