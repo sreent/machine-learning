@@ -41,8 +41,6 @@ Logistic regression’s effectiveness can be measured using metrics like **preci
 
 **K-Fold Cross Validation** is commonly used to assess how well our model generalizes to new data. It involves splitting the data into \( K \) parts, training on \( K-1 \) parts, and validating on the remaining part. This process repeats \( K \) times, with each part serving as the validation set once. Cross-validation ensures our model is robust and minimizes overfitting, making it especially valuable when data is limited.
 
----
-
 **Summary**
 
 Logistic regression is a powerful tool for binary classification, helping predict the probability of an outcome, such as customer churn. By mapping a linear combination of input features to probabilities through the **sigmoid function**, it provides interpretable scores between 0 and 1. Logistic regression uses **Maximum Likelihood Estimation (MLE)** to find the best-fitting model parameters, often optimized through **gradient descent**.
