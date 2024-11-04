@@ -12,26 +12,26 @@ Logistic regression is a classification technique designed to estimate the proba
 
 To convert a linear combination of input features (like vehicle age and service frequency) into a probability, logistic regression uses the **sigmoid function**. This function is central to logistic regression as it “squeezes” values into a range between 0 and 1, making them interpretable as probabilities. The sigmoid function is defined as:
 
-\[
+$$
 \sigma(z) = \frac{1}{1 + e^{-z}}
-\]
+$$
 
-where \( z = w \cdot x + b \):
-- \( w \) represents the weights for each feature,
-- \( x \) represents the input features (e.g., vehicle age, service frequency),
-- \( b \) is the bias term.
+where $ z = w \cdot x + b $:
+- $w$ represents the weights for each feature,
+- $x$ represents the input features (e.g., vehicle age, service frequency),
+- $b$ is the bias term.
 
-This transformation allows us to interpret high \( z \) values as probabilities close to 1 (indicating likely churn) and low \( z \) values as probabilities close to 0.
+This transformation allows us to interpret high $z$ values as probabilities close to 1 (indicating likely churn) and low $z$ values as probabilities close to 0.
 
 **Finding Optimal Weights through Maximum Likelihood Estimation**
 
-To determine the best weights \( w \), logistic regression uses **Maximum Likelihood Estimation (MLE)**. This method seeks the parameters that make the observed data most probable under the model. The goal is to maximize the **log-likelihood function**, which expresses how well our model explains the actual data. For binary outcomes, the log-likelihood function is:
+To determine the best weights $w$, logistic regression uses **Maximum Likelihood Estimation (MLE)**. This method seeks the parameters that make the observed data most probable under the model. The goal is to maximize the **log-likelihood function**, which expresses how well our model explains the actual data. For binary outcomes, the log-likelihood function is:
 
-\[
+$$
 \log L(w) = \sum_{i=1}^{N} \left( y^{(i)} \log P(y=1|x^{(i)}) + (1 - y^{(i)}) \log (1 - P(y=1|x^{(i)})) \right)
-\]
+$$
 
-where \( y^{(i)} \) is the actual label (1 for churn, 0 for stay), and \( P(y=1|x^{(i)}) \) is the predicted probability. To find the weights that maximize this function, we use **gradient descent**. This iterative method adjusts the weights in small steps to increase the likelihood, moving closer to a model that accurately reflects the data.
+where $y^{(i)}$ is the actual label (1 for churn, 0 for stay), and $P(y=1|x^{(i)})$ is the predicted probability. To find the weights that maximize this function, we use **gradient descent**. This iterative method adjusts the weights in small steps to increase the likelihood, moving closer to a model that accurately reflects the data.
 
 **Evaluating with Precision, Recall, and Cross-Validation**
 
@@ -39,7 +39,7 @@ Logistic regression’s effectiveness can be measured using metrics like **preci
 - **Precision** measures how many of our predicted positives (high churn probability) are actual churn cases. This is crucial if false positives are costly.
 - **Recall** measures how many actual churn cases we correctly identified, which is important if missing true positives (actual churners) is costly.
 
-**K-Fold Cross Validation** is commonly used to assess how well our model generalizes to new data. It involves splitting the data into \( K \) parts, training on \( K-1 \) parts, and validating on the remaining part. This process repeats \( K \) times, with each part serving as the validation set once. Cross-validation ensures our model is robust and minimizes overfitting, making it especially valuable when data is limited.
+**K-Fold Cross Validation** is commonly used to assess how well our model generalizes to new data. It involves splitting the data into $K$ parts, training on $K-1$ parts, and validating on the remaining part. This process repeats $K$ times, with each part serving as the validation set once. Cross-validation ensures our model is robust and minimizes overfitting, making it especially valuable when data is limited.
 
 **Summary**
 
