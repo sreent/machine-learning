@@ -9,7 +9,7 @@ Imagine visiting a doctor with a fever and runny nose, symptoms of a larger vira
 Regularization is a technique that modifies the learning algorithm to prevent overfitting by adding a penalty for larger weight values. In L2 regularization, also known as Ridge regression, this penalty is proportional to the square of the weights. Regularization changes the cost function by combining the original error term with this penalty term, encouraging the model to keep weights smaller. The cost function for regularized logistic regression can be expressed as:
 
 $$
-J(w) = -L(w) + \lambda \sum w^2
+J(w) = -L(w) + \lambda \sum \|\vec{w}\|_2^2
 $$
 
 where:
