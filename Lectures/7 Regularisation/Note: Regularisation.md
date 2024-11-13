@@ -13,9 +13,9 @@ J(w) = -L(w) + \lambda \sum \lVert\vec{w}\rVert_2^2
 $$
 
 where:
-- $L(w)$ is the log-likelihood function, representing the original error term that logistic regression seeks to minimize,
+- $L(\vec{w})$ is the log-likelihood function, representing the original error term that logistic regression seeks to minimize,
 - $\lambda$ is the regularization parameter, controlling the strength of the penalty,
-- $w$ represents the model’s weights.
+- $\vec{w}$ represents the model’s weights.
 
 In this modified cost function, the penalty term $\lambda \sum w^2$ discourages excessively large weights. The higher the value of $\lambda$, the greater the penalty for large weights, leading to more regularization. By penalizing larger weights, L2 regularization implicitly forces the model to be simpler and less prone to capturing noise, which improves its ability to generalize to new data.
 
