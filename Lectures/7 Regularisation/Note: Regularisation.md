@@ -13,7 +13,7 @@ J(w) = -L(w) + \lambda \sum \lVert\vec{w}\rVert_2^2
 $$
 
 where:
-- $L(\vec{w})$ is the log-likelihood function, representing the original error term that logistic regression seeks to minimize,
+- $-L(\vec{w})$ is the negative log-likelihood function, representing the original error term that logistic regression seeks to minimize,
 - $\lambda$ is the regularization parameter, controlling the strength of the penalty,
 - $\vec{w}$ represents the model’s weights.
 
