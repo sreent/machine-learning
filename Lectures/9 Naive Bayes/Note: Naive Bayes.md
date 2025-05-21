@@ -12,7 +12,6 @@ We multiply those private likelihoods, mix in how common each suspect is, and—
 No debate, no waiting: the naive-but-dead-fast way to solve a case.
 That, in a nutshell, is **Naïve Bayes** (NB).&#x20;
 
----
 
 ### 1 Why the model is called “naïve”
 
@@ -28,7 +27,6 @@ Now the joint factorises into a neat product $\prod_i P(x^{(i)}\mid y)$.
 We’ve traded realism for tractability — but, like our expert panel, the math becomes a row of single-dimension look-ups and one big multiplication.
 That is the “naïve” move, and it turns an impossible density-estimation task into a statistics-on-a-napkin exercise.&#x20;
 
----
 
 ### 2 Two flavours that cover most menus
 
@@ -39,7 +37,6 @@ That is the “naïve” move, and it turns an impossible density-estimation tas
 
 Both flavours finish training in a single pass: count, or compute mean/variance — that’s it.&#x20;
 
----
 
 ### 3 Log-probabilities and the underflow monster
 
@@ -48,7 +45,6 @@ The remedy is to **take logs**: products turn into sums, and the biggest log-sum
 A favourite demo is typing `0.1**1000` into Python and watching the result collapse to 0, then rerunning the same calculation in log-space with no drama.
 Every industrial NB implementation works in log-space; the denominator is just a *log-sum-exp* that rescales everything back to finite probabilities.&#x20;
 
----
 
 ### 4 Bias, variance, and why NB wins small-data races
 
@@ -57,7 +53,6 @@ NB can squeeze useful posteriors from a few dozen examples because the number of
 Compare the learning curves in the slides: NB hits respectable accuracy after 50 labelled emails; logistic regression needs ten times more to overtake.
 So NB is the “high-bias, low-variance” detective: quick to form an opinion, a bit blind to subtle interactions, but hard to overfit.&#x20;
 
----
 
 ### 5 Representations that love (or hate) NB
 
@@ -68,7 +63,6 @@ So NB is the “high-bias, low-variance” detective: quick to form an opinion, 
 
 The guiding rule: give NB features whose meaning really is close to independent; then its naive multiplication becomes shockingly effective.&#x20;
 
----
 
 ### **Take-home intuition**
 
