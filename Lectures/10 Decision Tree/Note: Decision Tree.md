@@ -100,7 +100,7 @@ Final performance is reported on a **held-out test set**.
 
 ## Decision Boundaries & Interpretability  
 
-* Splits are **axis-aligned**: each rule “$x_j \le t$?” draws a vertical/horizontal line (or hyperplane) in feature space.  
+* Splits are **axis-aligned**: each rule $x_j \le t$? draws a vertical/horizontal line (or hyperplane) in feature space.  
 * The space is carved into **rectangular regions**; each region predicts a constant class.  
 * **Model explanation:** list the IF–THEN rules along the path from root to leaf.  
   *Example: “IF Seating = Outdoor → Cookie; ELSE IF Drink = Coffee → Muffin; ELSE → Cake.”*
