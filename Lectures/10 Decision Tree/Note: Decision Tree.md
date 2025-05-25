@@ -28,6 +28,7 @@ Two possible strategies:
 Both trees reach the same three leaves, but the *Seating-first* tree does it with **one less question** on the Outdoor branch. This shows the tree’s goal: **ask the question that reduces uncertainty the most**. Next we formalize “uncertainty” with entropy and “reduction” with information gain.
 
 
+
 ## 2 Entropy and Information Gain  
 
 ### 2.1 Entropy ($H$)
@@ -57,6 +58,7 @@ $\text{IG}(S, A) = H(S) -\sum_{v \in \text{values}(A)}\frac{|S_v|}{|S|}H(S_v)$
 Hence the algorithm prefers **Seating** as the root split.
 
 
+
 ## 3 Handling Numeric vs Categorical Features  
 
 | Feature type | How the tree splits | Practical note |
@@ -65,6 +67,7 @@ Hence the algorithm prefers **Seating** as the root split.
 | **Categorical** | A simple approach is **label encoding**: map each unique category to an integer (e.g. Red → 0, Green → 1, Blue → 2). The tree then treats the column like a numeric feature and still searches for the best threshold. <br><br>*Alternative:* explicitly branch on each category (“IF color = Red → …”). | In scikit-learn, `LabelEncoder` (or `OrdinalEncoder`) is the quickest way to feed categories into a single decision tree. One-hot encoding is *not* required, because trees handle integer codes naturally. |
 
 > **Key point:** After label encoding, **the same threshold-search routine used for continuous features handles categorical ones as well**.
+
 
 
 ## 4 Training a Decision Tree: Algorithm & Stopping Rules  
@@ -95,6 +98,7 @@ Use **cross-validation** to sweep hyper-parameters, picking the model that maxim
 Final performance is reported on a **held-out test set**.
 
 
+
 ## 5 Decision Boundaries & Interpretability  
 
 * Splits are **axis-aligned**: each rule $x_j \le t$? draws a vertical/horizontal line (or hyperplane) in feature space.  
@@ -107,9 +111,11 @@ Final performance is reported on a **held-out test set**.
 Sum the **information gain** a feature contributes across all its splits ⇒ importance score. Features used near the top with large IG dominate. Most libraries (e.g., scikit-learn) output normalized importance values.
 
 
+
 ## 6 No Need for Feature Scaling  
 
 Decision trees compare features **individually** with simple threshold tests. They do **not** rely on distances, dot products, or weight magnitudes. Therefore **normalization / standardization is unnecessary** for tree models.
+
 
 
 ## 7 Summary  
