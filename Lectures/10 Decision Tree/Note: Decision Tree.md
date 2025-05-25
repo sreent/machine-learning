@@ -1,6 +1,6 @@
 # Decision Tree Classification
 
-## Introduction  
+## 1 Introduction  
 
 Imagine you’re trying to diagnose a problem or make a decision by asking a series of questions. Each answer **narrows down the possibilities**, much like a flowchart or a game of **20 Questions**. A **Decision Tree** is this process in a formal, data-driven way.  
 
@@ -10,7 +10,6 @@ Imagine you’re trying to diagnose a problem or make a decision by asking a ser
 
 A decision tree thus **systematically splits data** into sub-groups by asking the *most informative questions first*, homing in on a prediction.
 
----
 
 ### Café‐Pastry Example  
 
@@ -28,11 +27,10 @@ Two possible strategies:
 
 Both trees reach the same three leaves, but the *Seating-first* tree does it with **one less question** on the Outdoor branch. This shows the tree’s goal: **ask the question that reduces uncertainty the most**. Next we formalize “uncertainty” with entropy and “reduction” with information gain.
 
----
 
-## Entropy and Information Gain  
+## 2 Entropy and Information Gain  
 
-### Entropy ($H$)
+### 2.1 Entropy ($H$)
 
 $H(S) = -\sum_{c \in \text{classes}} p(c)\,\log_2 p(c)$
 
@@ -43,9 +41,8 @@ $H(S) = -\sum_{c \in \text{classes}} p(c)\,\log_2 p(c)$
 Example:  
 *50 % Cookies / 50 % Muffins → higher entropy.* *100 % Muffins → entropy 0.*
 
----
 
-### Information Gain (IG)
+### 2.2 Information Gain (IG)
 
 When we split node $S$ on feature $A$:
 
@@ -59,9 +56,8 @@ $\text{IG}(S, A) = H(S) -\sum_{v \in \text{values}(A)}\frac{|S_v|}{|S|}H(S_v)$
 
 Hence the algorithm prefers **Seating** as the root split.
 
----
 
-## Handling Numeric vs Categorical Features  
+## 3 Handling Numeric vs Categorical Features  
 
 | Feature type | How the tree splits | Practical note |
 |--------------|--------------------|----------------|
@@ -70,9 +66,8 @@ Hence the algorithm prefers **Seating** as the root split.
 
 > **Key point:** After label encoding, **the same threshold-search routine used for continuous features handles categorical ones as well**.
 
----
 
-## Training a Decision Tree: Algorithm & Stopping Rules  
+## 4 Training a Decision Tree: Algorithm & Stopping Rules  
 
 1. **Root node:** start with entire training set.  
 2. **Evaluate each feature / threshold:** compute IG.  
@@ -88,7 +83,6 @@ Hence the algorithm prefers **Seating** as the root split.
      * **`min_samples_split`** – require ≥ *N* samples to split.  
      * **`min_samples_leaf`** – require ≥ *N* samples in each leaf.
 
----
 
 ### Overfitting vs Underfitting  
 
@@ -100,9 +94,8 @@ Hence the algorithm prefers **Seating** as the root split.
 Use **cross-validation** to sweep hyper-parameters, picking the model that maximizes validation accuracy (best bias–variance balance).  
 Final performance is reported on a **held-out test set**.
 
----
 
-## Decision Boundaries & Interpretability  
+## 5 Decision Boundaries & Interpretability  
 
 * Splits are **axis-aligned**: each rule $x_j \le t$? draws a vertical/horizontal line (or hyperplane) in feature space.  
 * The space is carved into **rectangular regions**; each region predicts a constant class.  
@@ -113,21 +106,20 @@ Final performance is reported on a **held-out test set**.
 
 Sum the **information gain** a feature contributes across all its splits ⇒ importance score. Features used near the top with large IG dominate. Most libraries (e.g., scikit-learn) output normalized importance values.
 
----
 
-## No Need for Feature Scaling  
+## 6 No Need for Feature Scaling  
 
 Decision trees compare features **individually** with simple threshold tests. They do **not** rely on distances, dot products, or weight magnitudes. Therefore **normalization / standardization is unnecessary** for tree models.
 
----
 
-## Summary  
+## 7 Summary  
 
 * A decision tree asks a hierarchy of questions, **greedily choosing the split that maximizes information gain** at each node.  
-* **Entropy** measures node impurity; **information gain** quantifies how much a split reduces that impurity.  
+* **Entropy** measures node impurity; **information gain** quantifies how much a split reduces that impurity.
+* Numeric features are split on optimal **thresholds**; categorical features can be **label-encoded** so the same threshold search applies.  
 * Hyper-parameters such as `max_depth`, `min_samples_split`, and `min_samples_leaf` control complexity, preventing over- and underfitting.  
 * **Cross-validation** tunes these parameters, safeguarding the model’s generalization.  
 * Trees yield **transparent rules**, axis-aligned decision boundaries, and clear feature-importance scores.  
 * They require **no feature scaling** and form the building blocks of powerful ensembles like Random Forests and Gradient Boosted Trees.
 
-With a solid grasp of decision trees, you’re ready to deploy them responsibly and appreciate both their strengths (interpretability) and limitations (tendency to overfit without pruning).
+With a solid grasp of decision trees, we’re ready to deploy them responsibly and appreciate both their strengths (interpretability) and limitations (tendency to overfit without pruning).
