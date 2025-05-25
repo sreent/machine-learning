@@ -41,8 +41,7 @@ $H(S) = -\sum_{c \in \text{classes}} p(c)\,\log_2 p(c)$
 * **Low $H$** → node is pure (all one class).  
 
 Example:  
-*50 % Cookies / 50 % Muffins → higher entropy.*  
-*100 % Muffins → entropy 0.*
+*50 % Cookies / 50 % Muffins → higher entropy.* *100 % Muffins → entropy 0.*
 
 ---
 
@@ -59,6 +58,17 @@ $\text{IG}(S, A) = H(S) -\sum_{v \in \text{values}(A)}\frac{|S_v|}{|S|}H(S_v)$
 * **Drink-first** leaves both children mixed → smaller IG.  
 
 Hence the algorithm prefers **Seating** as the root split.
+
+---
+
+## Handling Numeric vs Categorical Features  
+
+| Feature type | How the tree splits | Practical note |
+|--------------|--------------------|----------------|
+| **Numeric / continuous** | The algorithm sorts the unique values of the feature, then tests threshold candidates at each midpoint, e.g. $(v_i+v_{i+1})/2$. The threshold that yields the **highest information gain** becomes the binary split $x_j \le \theta$? | Works out-of-the-box for any real-valued column. |
+| **Categorical** | A simple approach is **label encoding**: map each unique category to an integer (e.g. Red → 0, Green → 1, Blue → 2). The tree then treats the column like a numeric feature and still searches for the best threshold. <br><br>*Alternative:* explicitly branch on each category (“IF color = Red → …”). | In scikit-learn, `LabelEncoder` (or `OrdinalEncoder`) is the quickest way to feed categories into a single decision tree. One-hot encoding is *not* required, because trees handle integer codes naturally. |
+
+> **Key point:** After label encoding, **the same threshold-search routine used for continuous features handles categorical ones as well**.
 
 ---
 
