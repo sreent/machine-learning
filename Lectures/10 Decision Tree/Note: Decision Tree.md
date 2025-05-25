@@ -1,6 +1,6 @@
 # Decision Tree
 
-## 1 Introduction  
+### 1 Introduction  
 
 Imagine you’re trying to **diagnose a problem** or **make a decision** by asking a series of questions. Each answer **narrows down the possibilities**, much like a flowchart or a game of **20 Questions**. A **Decision Tree** is simply this idea carried out in a formal, data-driven manner.
 
@@ -30,9 +30,9 @@ Both approaches ultimately produce the same leaves (*Muffin*, *Cake*, *Cookie*).
 
 ---
 
-## 2 Entropy and Information Gain  
+### 2 Entropy and Information Gain  
 
-### 2.1 Entropy $H$  
+#### 2.1 Entropy $H$  
 
 To quantify “uncertainty,” we use a measure called **entropy**. Formally:
 
@@ -47,7 +47,7 @@ For instance:
 - *50% Cookies / 50% Muffins → higher entropy.*  
 - *100% Muffins → entropy 0.*
 
-### 2.2 Information Gain (IG)  
+#### 2.2 Information Gain (IG)  
 
 A decision tree reduces this entropy by splitting on features that best separate the classes. The measure of that separation is **information gain**:
 
@@ -61,7 +61,7 @@ This calculation starts with the entropy of the parent node ($H(S)$) and subtrac
 
 ---
 
-## 3 Handling Numeric vs Categorical Features  
+### 3 Handling Numeric vs Categorical Features  
 
 Decision trees handle different feature types in slightly different ways. Here’s a concise overview:
 
@@ -76,7 +76,7 @@ In a practical setting, imagine a dataset for predicting whether a person will s
 
 ---
 
-## 4 Training a Decision Tree: Algorithm & Stopping Rules  
+### 4 Training a Decision Tree: Algorithm & Stopping Rules  
 
 Building a decision tree can be broken into a sequence of steps, from selecting the root question to deciding when to stop:
 
@@ -104,7 +104,7 @@ In other words, you want the decision tree to balance capturing enough detail (w
 
 ---
 
-## 5 Decision Boundaries & Interpretability  
+### 5 Decision Boundaries & Interpretability  
 
 Once you’ve trained a decision tree, its decision boundaries and interpretability often become big selling points for using it:
 
@@ -121,7 +121,7 @@ Another interpretability advantage is that decision trees naturally provide **fe
 
 ---
 
-## 6 No Need for Feature Scaling  
+### 6 No Need for Feature Scaling  
 
 Unlike some other algorithms, decision trees compare features **individually** with simple threshold checks. They do **not** rely on distances or dot products. As a result, **normalization and standardization** of features are unnecessary for tree-based methods.
 
@@ -129,7 +129,7 @@ If you’re used to scaling features for neural networks, k-Nearest Neighbors, o
 
 ---
 
-## 7 Summary  
+### 7 Summary  
 
 A decision tree essentially asks a hierarchy of data-driven questions. Each node splits on the feature that most reduces entropy, measured by **information gain**. Along the way, the algorithm checks for stopping criteria or applies pruning to avoid overfitting. Here are the key takeaways:
 
