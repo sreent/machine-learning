@@ -1,4 +1,4 @@
-# Decision Tree Classification
+# Decision Tree
 
 ## 1 Introduction  
 
