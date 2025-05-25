@@ -2,9 +2,7 @@
 
 ## Introduction  
 
-Imagine you’re trying to diagnose a problem or make a decision by asking a series of questions.  
-Each answer **narrows down the possibilities**, much like a flowchart or a game of **20 Questions**.  
-A **Decision Tree** is this process in a formal, data-driven way.  
+Imagine you’re trying to diagnose a problem or make a decision by asking a series of questions. Each answer **narrows down the possibilities**, much like a flowchart or a game of **20 Questions**. A **Decision Tree** is this process in a formal, data-driven way.  
 
 * It starts with an initial query at the **root** and branches based on the answer.  
 * Each subsequent question (an **internal node**) further splits the data.  
@@ -28,9 +26,7 @@ Two possible strategies:
 | **Drink → Seating** | Root split on **Drink**. Each branch then asks **Seating** (Indoor / Outdoor) to decide the pastry. Both branches still need a second question because drink alone doesn’t yield pure groups. |
 | **Seating → Drink** | Root split on **Seating**. Outdoor customers jump straight to *Cookie* (pure). Indoor customers need one more split on **Drink** (Coffee → Muffin, Tea → Cake). This ordering yields purer groups earlier. |
 
-Both trees reach the same three leaves, but the *Seating-first* tree does it with **one less question** on the Outdoor branch.  
-This shows the tree’s goal: **ask the question that reduces uncertainty the most**.  
-Next we formalize “uncertainty” with entropy and “reduction” with information gain.
+Both trees reach the same three leaves, but the *Seating-first* tree does it with **one less question** on the Outdoor branch. This shows the tree’s goal: **ask the question that reduces uncertainty the most**. Next we formalize “uncertainty” with entropy and “reduction” with information gain.
 
 ---
 
@@ -56,9 +52,7 @@ When we split node $S$ on feature $A$:
 
 $\text{IG}(S, A) = H(S) -\sum_{v \in \text{values}(A)}\frac{|S_v|}{|S|}H(S_v)$
 
-*Parent entropy minus weighted child entropies.*  
-The **split with the highest IG** is chosen.  
-*(Gini impurity is an alternative, but we focus on entropy as in the lecture.)*
+*Parent entropy minus weighted child entropies.* The **split with the highest IG** is chosen. *(Gini impurity is an alternative, but we focus on entropy as in the lecture.)*
 
 #### Café example revisited  
 * **Seating-first** split creates an *Outdoor* branch that’s 100 % Cookie → entropy 0 → large IG.  
@@ -107,17 +101,13 @@ Final performance is reported on a **held-out test set**.
 
 ### Feature (Variable) Importance  
 
-Sum the **information gain** a feature contributes across all its splits ⇒ importance score.  
-Features used near the top with large IG dominate.  
-Most libraries (e.g., scikit-learn) output normalized importance values.
+Sum the **information gain** a feature contributes across all its splits ⇒ importance score. Features used near the top with large IG dominate. Most libraries (e.g., scikit-learn) output normalized importance values.
 
 ---
 
 ## No Need for Feature Scaling  
 
-Decision trees compare features **individually** with simple threshold tests.  
-They do **not** rely on distances, dot products, or weight magnitudes.  
-Therefore **normalization / standardization is unnecessary** for tree models.
+Decision trees compare features **individually** with simple threshold tests. They do **not** rely on distances, dot products, or weight magnitudes. Therefore **normalization / standardization is unnecessary** for tree models.
 
 ---
 
