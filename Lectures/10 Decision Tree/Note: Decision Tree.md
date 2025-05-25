@@ -38,7 +38,7 @@ Next we formalize “uncertainty” with entropy and “reduction” with inform
 
 ### Entropy ($H$)
 
-$H(S) = - \sum_{c \in \text{classes}} p(c)\,\log_2 p(c)$
+$$H(S) = - \sum_{c \in \text{classes}} p(c)\,\log_2 p(c)$$
 
 * $p(c)$ = proportion of class $c$ in set $S$.  
 * **High $H$** → classes evenly mixed (uncertain).  
