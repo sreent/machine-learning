@@ -38,7 +38,7 @@ Next we formalize “uncertainty” with entropy and “reduction” with inform
 
 ### Entropy ($H$)
 
-$$H(S)=-\sum_{c \in \text{classes}} p(c)\,\log_2 p(c)$$
+$H(S) = -\sum_{c \in \text{classes}} p(c)\,\log_2 p(c)$
 
 * $p(c)$ = proportion of class $c$ in set $S$.  
 * **High $H$** → classes evenly mixed (uncertain).  
@@ -54,14 +54,7 @@ Example:
 
 When we split node $S$ on feature $A$:
 
-$
-\text{IG}(S, A) \;=\;
-H(S)\;
--\;
-\sum_{v \in \text{values}(A)}
-\frac{|S_v|}{|S|}\;
-H(S_v)
-$
+$\text{IG}(S, A) = H(S) -\sum_{v \in \text{values}(A)}\frac{|S_v|}{|S|}H(S_v)$
 
 *Parent entropy minus weighted child entropies.*  
 The **split with the highest IG** is chosen.  
