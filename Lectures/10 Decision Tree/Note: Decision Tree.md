@@ -28,7 +28,7 @@ Picture a café by the park, where customers who sit outside might be more likel
 
 Both approaches ultimately produce the same leaves (*Muffin*, *Cake*, *Cookie*). However, the *Seating-first* tree requires **one fewer question** on the Outdoor branch, illustrating how decision trees aim to **reduce uncertainty as quickly as possible**.
 
----
+
 
 ### 2 Entropy and Information Gain  
 
@@ -59,7 +59,7 @@ This calculation starts with the entropy of the parent node ($H(S)$) and subtrac
 
 **Revisiting the café example**: Splitting first on **Seating** sends Outdoor customers (100% Cookie) into a perfectly pure node, giving high IG. Splitting on **Drink** first, on the other hand, leaves both children mixed, and the resulting IG is lower—hence the preference for **Seating** as the top-level question.
 
----
+
 
 ### 3 Handling Numeric vs Categorical Features  
 
@@ -74,7 +74,7 @@ Decision trees handle different feature types in slightly different ways. Here�
 
 In a practical setting, imagine a dataset for predicting whether a person will subscribe to a streaming service. You might have a numeric feature like *age* (split using a threshold such as 30.5) and a categorical feature like *favorite genre*, which can be turned into integers (e.g., Action → 0, Comedy → 1, Drama → 2, etc.) and then treated similarly by the algorithm.
 
----
+
 
 ### 4 Training a Decision Tree: Algorithm & Stopping Rules  
 
@@ -102,7 +102,7 @@ While following these steps, you must watch for:
 
 In other words, you want the decision tree to balance capturing enough detail (without memorizing noise) and staying general enough to work on new data. **Cross-validation** helps you tune these hyperparameters by testing how well the model generalizes; final performance is then confirmed on a **held-out test set**.
 
----
+
 
 ### 5 Decision Boundaries & Interpretability  
 
@@ -119,7 +119,7 @@ Thanks to these straightforward splits, **stakeholders**—whether they’re bus
 
 Another interpretability advantage is that decision trees naturally provide **feature importance** scores. By summing the **information gain** a feature contributes across all the splits in which it appears, you get a measure of how pivotal that feature is overall. Features near the top of the tree often have the largest impact on predictions.
 
----
+
 
 ### 6 No Need for Feature Scaling  
 
@@ -127,7 +127,7 @@ Unlike some other algorithms, decision trees compare features **individually** w
 
 If you’re used to scaling features for neural networks, k-Nearest Neighbors, or SVMs, this is one less step to worry about when setting up your data for a decision tree.
 
----
+
 
 ### 7 Summary  
 
