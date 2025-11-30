@@ -1,8 +1,8 @@
-# Project Idea 1C: Regression with Linear and kNN Models
+# Project Idea 1C: Regression with Linear, kNN, and Decision Tree Models
 
 ## Aim
 
-To compare several core regression algorithms and concepts from the course—**Linear Regression** and **k-Nearest Neighbours (kNN) Regression**—on a single standard regression dataset from scikit-learn. The goals are to:
+To compare several core regression algorithms and concepts from the course—primarily **Linear Regression** and **k-Nearest Neighbours (kNN) Regression**, with **Decision Tree Regression** as an additional non-linear baseline—on a single standard regression dataset from scikit-learn. The goals are to:
 
 * understand how linear vs non-parametric (kNN) models behave on the same regression problem,
 * analyse the effect of **L2 regularisation** and key training hyperparameters (such as learning rate) on linear models,
@@ -28,7 +28,7 @@ This makes it ideal for focusing on regression algorithms themselves rather than
 
 ## Algorithms
 
-All algorithms are taken from the lecture list (linear regression, gradient descent, regularisation, kNN) and will be applied to the chosen regression dataset.
+All algorithms are taken from the lecture list (linear regression, gradient descent, regularisation, kNN, decision trees) and will be applied to the chosen regression dataset.
 
 Planned algorithms:
 
@@ -42,7 +42,13 @@ Planned algorithms:
   * using Euclidean distance on appropriately scaled features,
   * exploring different values of k to understand bias–variance trade-offs.
 
-The intention is to implement **Linear Regression with gradient descent and L2 regularisation** and, if feasible, **kNN Regression** from scratch in Python/NumPy, while scikit-learn implementations (e.g. `LinearRegression`, `Ridge`, `KNeighborsRegressor`) are used for comparison and to support hyperparameter tuning experiments.
+* **Decision Tree Regression**
+
+  * implemented via scikit-learn’s `DecisionTreeRegressor` (no from-scratch implementation),
+  * using a standard splitting criterion (e.g. squared error),
+  * exploring `max_depth` (and optionally `min_samples_split`) to understand how tree complexity affects overfitting and generalisation.
+
+The intention is to implement **Linear Regression with gradient descent and L2 regularisation** and, if feasible, **kNN Regression** from scratch in Python/NumPy, while scikit-learn implementations (e.g. `LinearRegression`, `Ridge`, `KNeighborsRegressor`, `DecisionTreeRegressor`) are used for comparison and to support hyperparameter tuning experiments.
 
 ---
 
@@ -109,19 +115,17 @@ The intention is to implement **Linear Regression with gradient descent and L2 r
 * Compare these metrics against the naive baseline to show absolute performance gains.
 
 ### 6. Model Complexity & Regularisation Analysis
-
-* Investigate **overfitting vs underfitting** and the effect of model complexity:
-
-  * For **Linear Regression with L2 regularisation**: vary the regularisation strength lambda and examine how performance and weight magnitudes change; discuss the bias–variance trade-off.
-  * For **kNN Regression**: vary `k` and observe how performance changes (small k → low bias, high variance; large k → higher bias, lower variance).
-* Plot performance vs model complexity/regularisation (e.g. validation RMSE vs lambda or k) to illustrate these effects.
-* Plot performance vs model complexity/regularisation (e.g. validation RMSE vs degree or (\lambda)) to illustrate these effects.
+- Investigate **overfitting vs underfitting** and the effect of model complexity:
+  - For **Linear Regression with L2 regularisation**: vary the regularisation strength lambda and examine how performance and weight magnitudes change; discuss the bias–variance trade-off.
+  - For **kNN Regression**: vary `k` and observe how performance changes (small k → low bias, high variance; large k → higher bias, lower variance).
+  - For **Decision Tree Regression**: vary `max_depth` and observe how validation performance changes; shallow trees may underfit, while very deep trees may overfit.
+- Plot performance vs model complexity/regularisation (e.g. validation RMSE vs lambda, k, or max_depth) to illustrate these effects.
 
 ### 7. Feature Importance & Interpretability
 
 * For **Linear Regression**:
 
-  * examine the fitted coefficients to understand which features (or polynomial terms) have the largest influence on the target,
+  * examine the fitted coefficients to understand which features have the largest influence on the target,
   * discuss how regularisation (L2) shrinks coefficients and helps mitigate overfitting, particularly when multicollinearity or noisy features are present.
 * For **kNN Regression**:
 
@@ -130,21 +134,19 @@ The intention is to implement **Linear Regression with gradient descent and L2 r
 * Relate the findings back to EDA (e.g. whether features that looked important in scatter plots also have large coefficients in the linear models).
 
 ### 8. Model Comparison
+- Summarise final tuned models and results on the **held-out test set** in a table, e.g.:
 
-* Summarise final tuned models and results on the **held-out test set** in a table, e.g.:
+| Model                          | Key Hyperparameters (tuned)                      | Test RMSE | Test MAE | Test R² |
+|--------------------------------|--------------------------------------------------|-----------|----------|---------|
+| Naive Baseline (mean predictor)| –                                                |    …      |    …     |   …     |
+| Linear Regression (GD + L2)    | learning rate = …, iterations = …, \(\lambda\) = …   |    …      |    …     |   …     |
+| kNN Regression                 | k = …                                            |    …      |    …     |   …     |
+| Decision Tree Regression       | max_depth = …, min_samples_split = …             |    …      |    …     |   …     |
 
-| Model                           | Key Hyperparameters (tuned)                      | Test RMSE | Test MAE | Test R² |
-| ------------------------------- | ------------------------------------------------ | --------- | -------- | ------- |
-| Naive Baseline (mean predictor) | –                                                | …         | …        | …       |
-| Linear Regression (GD + L2)     | learning rate = …, iterations = …, (\lambda) = … | …         | …        | …       |
-| Polynomial Regression           | degree = …, (\lambda) = …                        | …         | …        | …       |
-| kNN Regression                  | k = …                                            | …         | …        | …       |
-
-* Discuss the trade-offs by:
-
-  * Identifying which model performs best overall based on the chosen test metrics (e.g. lowest RMSE and MAE, highest R²) and explaining *why* it performs best in terms of assumptions (linear vs non-linear) and flexibility.
-  * Assessing which model is most robust to hyperparameters by examining how its performance varies across different hyperparameter settings (e.g. degree, (\lambda), k) and summarising which model is least sensitive.
-  * Comparing interpretability by discussing how easy it is to explain each model’s predictions (e.g. coefficients for linear/polynomial regression vs more opaque kNN behaviour).
+- Discuss the trade-offs by:
+  - Identifying which model performs best overall based on the chosen test metrics (e.g. lowest RMSE and MAE, highest R²) and explaining *why* it performs best in terms of assumptions (linear vs non-parametric) and flexibility.
+  - Assessing which model is most robust to hyperparameters by examining how its performance varies across different hyperparameter settings (e.g. \(\lambda\), k, max_depth) and summarising which model is least sensitive.
+  - Comparing interpretability by discussing how easy it is to explain each model’s predictions (e.g. coefficients for linear regression, local neighbourhoods in kNN, or the structure and splits of the decision tree).
 
 ---
 
