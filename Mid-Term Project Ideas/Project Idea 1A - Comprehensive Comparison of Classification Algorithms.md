@@ -7,7 +7,7 @@ To compare several core classification algorithms covered in the course—k-Near
 * identify which algorithm performs best under consistent conditions, and
 * understand the trade-offs between accuracy, overfitting, regularisation, and interpretability.
 
-At least one of these algorithms (likely kNN or Gaussian Naive Bayes) will be implemented **from scratch** in a separate pure-Python/NumPy implementation (using only Python and NumPy and no ML libraries), with the others possibly using **scikit-learn** for comparison.
+At least one, and preferably two, of these algorithms (most naturally **k-Nearest Neighbours** and **Gaussian Naive Bayes**) will be implemented **from scratch** in separate pure-Python/NumPy implementations (using only Python and NumPy and no ML libraries), with Logistic Regression and/or the Decision Tree possibly using **scikit-learn** for comparison. This creates clear opportunities to go beyond the minimum coursework requirement in terms of implementation depth.
 
 ---
 
@@ -59,8 +59,9 @@ Planned algorithms:
 
 ### 3. Algorithm Implementation & Baseline Training
 
-* Implement at least one algorithm from scratch (e.g. kNN or Naive Bayes) using only Python + NumPy.
+* Implement at least one, and ideally both, of **kNN** and **Gaussian Naive Bayes** from scratch using only Python + NumPy, so that there are two independent from-scratch implementations available for comparison with their scikit-learn counterparts.
 * Define a simple **naive baseline classifier** (e.g. always predicting the majority class) and evaluate it as a reference point for all other models.
+* Optionally verify the from-scratch implementations of **kNN** and **Gaussian Naive Bayes** by comparing their predictions or metrics against the corresponding scikit-learn models on a subset of the data; the main experiments will then use the scikit-learn implementations for efficiency.
 
 ### 4. Cross-Validation
 
@@ -69,14 +70,14 @@ Planned algorithms:
 
   * estimate generalisation performance,
   * compare algorithms more robustly than a single train/test split.
-* Note: for **much larger datasets**, a single hold-out validation split might be preferred for computational efficiency, whereas for smaller datasets k-fold cross-validation helps make better use of limited data.
+* Note: for **much larger datasets**, a single hold-out validation split within the training data might be preferred for computational efficiency, whereas for very small tabular datasets with only a few hundred points (such as Iris or Wine) k-fold cross-validation is especially important to make good use of limited data. Here we deliberately choose a small to moderately sized dataset where 5-fold cross-validation on the training set remains practical, and we will briefly justify this choice in the report.
 
 ### 5. Hyperparameter Tuning
 
 * Use grid search (or similar) with cross-validation on the **training set** to tune key hyperparameters:
 
   * kNN: `n_neighbors (k)`, distance metric.
-  * Naive Bayes: usually few or no hyperparameters; use the standard Gaussian NB implementation with its default `var_smoothing` for numerical stability rather than treating it as a tuned hyperparameter.
+  * Naive Bayes: usually few or no hyperparameters; for the **scikit-learn GaussianNB used for comparison**, keep the default `var_smoothing` for numerical stability rather than treating it as a tuned hyperparameter.
   * Logistic Regression: regularisation strength `C`, penalty type (e.g. L2).
   * Decision Tree: `max_depth`, `min_samples_split` (with the criterion fixed to `entropy`).
 * Select the best hyperparameters based on validation performance.
