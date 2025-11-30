@@ -10,7 +10,7 @@ The goals are to:
 * study how different techniques (e.g. **PCA from scratch** vs **supervised feature selection** such as SelectKBest / mutual information) interact with different classifiers,
 * analyse trade-offs between **performance, overfitting, computational cost, and interpretability**.
 
-The intention is to implement **PCA** and at least one classifier (most naturally **Gaussian Naive Bayes** or **kNN**) **from scratch** using only Python and NumPy (no ML libraries). The remaining algorithms (e.g. Logistic Regression and Decision Tree) and feature-selection utilities (e.g. SelectKBest, RFE) will use scikit-learn for comparison. This creates clear opportunities to go beyond the minimum coursework requirement in terms of implementation depth.
+The intention is to implement **PCA** and at least one classifier (most naturally **Gaussian Naive Bayes** or **kNN**) **from scratch** using only Python and NumPy (no ML libraries). The remaining algorithms (e.g. Logistic Regression and Decision Tree) and feature-selection utilities (e.g. SelectKBest) will use scikit-learn for comparison. This creates clear opportunities to go beyond the minimum coursework requirement in terms of implementation depth.
 
 ---
 
@@ -60,9 +60,10 @@ Planned classifiers:
 
 From-scratch implementation plan:
 
-* At least one, and ideally two, of the following will be implemented from scratch in pure Python + NumPy:
+* In line with the Aim, **PCA** and at least one classifier (most naturally **Gaussian Naive Bayes** or **kNN**) will be implemented from scratch in pure Python + NumPy, and, if feasible, both classifiers:
 
-  * **Gaussian Naive Bayes** and/or **kNN classifier**,
+  * **Gaussian Naive Bayes**,
+  * **kNN classifier**,
   * **PCA** (Principal Component Analysis) for dimensionality reduction.
 
 These from-scratch implementations will then be compared against scikit-learn counterparts to validate correctness and understand the algorithms more deeply.
@@ -87,24 +88,18 @@ The project will compare multiple feature selection / reduction strategies:
      * sort by eigenvalue magnitude,
      * project onto the top `d` principal components.
    * Optionally confirm results against scikit-learn’s `PCA` on a subset.
-   * `d` (number of components) will be treated as a hyperparameter.
+   * `d` (number of components) will be treated as a hyperparameter, chosen from a small set of candidate values (e.g. 2, 5, 10, 15) and informed by standard rules such as retaining a target proportion of cumulative explained variance (e.g. 90–95%) or the Kaiser rule (eigenvalues greater than 1 for standardised features).
 
 3. **Univariate Feature Selection (SelectKBest)**
 
    * Use scikit-learn’s `SelectKBest` with a chosen scoring function, e.g. **ANOVA F-score** or **mutual information**.
    * `k` (number of selected features) will be a hyperparameter.
 
-4. **Recursive Feature Elimination (RFE) – Optional Extension**
-
-   * Optionally apply RFE with Logistic Regression as the base estimator to obtain a ranking of features.
-   * Due to higher computational cost, this may be restricted to Logistic Regression only and treated as an **extension** beyond the core plan.
-
 In practice, to keep the scope manageable, the core comparison will focus on a subset of classifier–feature-selection combinations, for example:
 
 * **kNN** with **No selection**, **PCA**, and **SelectKBest**,
 * **Naive Bayes** with **No selection** and **PCA**,
 * **Logistic Regression** and **Decision Tree** primarily with **SelectKBest**,
-* **RFE** used only as an additional, optional analysis for Logistic Regression.
 
 **Important:** For all techniques, feature selection / PCA will be **fitted only on the training folds** within cross-validation, then applied to validation/test folds, to avoid data leakage.
 
@@ -171,7 +166,7 @@ In practice, to keep the scope manageable, the core comparison will focus on a s
   * **Gaussian Naive Bayes**: typically default parameters; optionally check a small range of `var_smoothing` if needed (for the scikit-learn version).
   * **Logistic Regression**: regularisation strength `C` (e.g. {0.01, 0.1, 1, 10}), with L2 penalty and a suitable solver.
   * **Decision Tree**: `max_depth` (e.g. {3, 5, 7, None}), `min_samples_split` (e.g. {2, 5}).
-  * **PCA**: number of components `d` (e.g. {2, 5, 10, 15}, depending on total feature count).
+  * **PCA**: number of components `d`, selected from a small set of values (e.g. {2, 5, 10, 15}) based on cumulative explained variance or, as a sanity check, the Kaiser rule; the final choice of `d` will be validated by cross-validation performance.
   * **SelectKBest**: number of selected features `k` (e.g. {5, 10, 15}).
 
 * Perform hyperparameter tuning using cross-validation on the **training set only**.
@@ -227,7 +222,7 @@ In practice, to keep the scope manageable, the core comparison will focus on a s
   * inspect explained variance ratios per component,
   * examine which original features load most heavily on the most important PCs, and how this relates to EDA and supervised feature selection results.
 
-* Relate findings back to EDA and to the selection scores from SelectKBest / RFE (if used).
+* Relate findings back to EDA and to the selection scores from SelectKBest.
 
 ### 9. Model Complexity Analysis
 
@@ -258,7 +253,7 @@ In practice, to keep the scope manageable, the core comparison will focus on a s
    * Introduce feature selection vs dimensionality reduction:
 
      * PCA (unsupervised, variance-based, linear projection),
-     * supervised methods (SelectKBest with F-score or mutual information, RFE).
+     * supervised methods (SelectKBest with F-score or mutual information).
    * Discuss the potential benefits and drawbacks of each technique and how they might interact with different classifiers.
 
 4. **Methodology**
