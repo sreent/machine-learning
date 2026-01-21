@@ -185,7 +185,7 @@ All notebooks use **Dropout + L2** without early stopping, and explain:
 | **Primary Metric** | MAE (interpretable in original units) |
 | **Output Layer** | 1 neuron, linear activation |
 | **Validation** | 5-Fold Cross-Validation (small dataset) |
-| **Special Features** | Regression vs classification comparison; MAE/RMSE/R² metrics |
+| **Special Features** | Regression vs classification comparison; MAE + R² metrics |
 
 ---
 
@@ -272,7 +272,7 @@ All notebooks use **Dropout + L2** without early stopping, and explain:
 |----------|---------|--------------|
 | Rain in Australia | Binary | ColumnTransformer; missing values; kNN imputation |
 | German Credit | Binary | SMOTE; Lift Curves; AUC for credit scoring |
-| Bike Sharing | Regression | MAE/RMSE/R²; linear output; K-Fold for small data |
+| Bike Sharing | Regression | MAE + R²; linear output; K-Fold for small data |
 
 ### Image Classification
 | Notebook | Classes | Key Learning |
