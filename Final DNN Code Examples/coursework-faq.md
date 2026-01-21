@@ -51,7 +51,7 @@ Your notebook should read as a **report**, not just code:
 
 ### Which workflow should I follow?
 
-Follow the **Universal ML Workflow** (Chollet, 2021):
+Follow the **Universal ML Workflow** (Chollet, 2021, Chapter 4.5):
 
 1. Define the problem & assemble dataset
 2. Choose a measure of success
@@ -188,8 +188,8 @@ Solutions:
 **This is overfitting!** Your model is memorising, not learning.
 
 Solutions:
-1. Add **Dropout** (0.2-0.5)
-2. Add **L2 regularisation** (0.001-0.01)
+1. Add **Dropout** (0.2-0.5) — randomly drops neurons during training (Srivastava et al., 2014)
+2. Add **L2 regularisation** (0.001-0.01) — penalises large weights (Krogh & Hertz, 1992)
 3. **Reduce** model size (fewer neurons)
 4. Get **more data** (if possible)
 
@@ -227,6 +227,8 @@ This is usually fine. Focus on whether validation loss is stable.
 ---
 
 ## 5. Metrics & Evaluation
+
+Choosing the right evaluation metric is crucial for assessing model performance (Sokolova & Lapalme, 2009).
 
 ### Which metric should I use?
 
@@ -278,6 +280,8 @@ The simplest possible prediction:
 
 ## 6. Class Imbalance
 
+Class imbalance is a common challenge in machine learning where some classes have significantly more samples than others (He & Garcia, 2009).
+
 ### How do I know if my data is imbalanced?
 
 ```python
@@ -318,7 +322,7 @@ model.fit(X_train, y_train, class_weight=class_weight, ...)
 For this coursework, **class weights are usually sufficient** and simpler.
 
 If you want to try resampling:
-- **Oversampling** (SMOTE): Better when you have limited data
+- **Oversampling** (SMOTE): Better when you have limited data (Chawla et al., 2002)
 - **Undersampling**: Risk losing information from majority class
 
 ---
@@ -337,6 +341,8 @@ If you want to try resampling:
 
 ### Hold-Out vs K-Fold: When to use which?
 
+The choice depends on dataset size (Kohavi, 1995):
+
 | Dataset Size | Method | Why |
 |--------------|--------|-----|
 | < 1,000 | K-Fold (K=5) | Small test sets are unreliable |
@@ -345,7 +351,7 @@ If you want to try resampling:
 
 ### What is Hyperband and when should I use it?
 
-**Hyperband** is an efficient hyperparameter search method:
+**Hyperband** (Li et al., 2018) is an efficient hyperparameter search method:
 
 - Trains many configurations for few epochs
 - Eliminates poor performers early
@@ -544,9 +550,46 @@ Is model learning? (training loss decreasing)
 
 ## References
 
-- Chollet, F. (2021) *Deep Learning with Python*. 2nd edn. Manning Publications.
-- Keras Documentation: https://keras.io/
-- scikit-learn Documentation: https://scikit-learn.org/
+### Primary Text
+
+- Chollet, F. (2021) *Deep Learning with Python*. 2nd edn. Shelter Island, NY: Manning Publications.
+  - Chapter 4.5: The Universal Workflow of Machine Learning
+  - Chapter 4.4: Overfitting and Underfitting
+  - Chapter 4.3: Evaluating Machine Learning Models
+
+### Validation & Cross-Validation
+
+- Kohavi, R. (1995) 'A study of cross-validation and bootstrap for accuracy estimation and model selection', *IJCAI*, 14(2), pp. 1137–1145.
+
+- Bergstra, J. and Bengio, Y. (2012) 'Random search for hyper-parameter optimization', *Journal of Machine Learning Research*, 13(1), pp. 281–305.
+
+### Class Imbalance
+
+- He, H. and Garcia, E.A. (2009) 'Learning from imbalanced data', *IEEE Transactions on Knowledge and Data Engineering*, 21(9), pp. 1263–1284.
+
+- Chawla, N.V. et al. (2002) 'SMOTE: Synthetic minority over-sampling technique', *Journal of Artificial Intelligence Research*, 16, pp. 321–357.
+
+### Regularisation
+
+- Srivastava, N. et al. (2014) 'Dropout: A simple way to prevent neural networks from overfitting', *Journal of Machine Learning Research*, 15(1), pp. 1929–1958.
+
+- Krogh, A. and Hertz, J.A. (1992) 'A simple weight decay can improve generalization', *Advances in Neural Information Processing Systems*, 4, pp. 950–957.
+
+### Hyperparameter Tuning
+
+- Li, L. et al. (2018) 'Hyperband: A novel bandit-based approach to hyperparameter optimization', *Journal of Machine Learning Research*, 18(1), pp. 6765–6816.
+
+### Evaluation Metrics
+
+- Sokolova, M. and Lapalme, G. (2009) 'A systematic analysis of performance measures for classification tasks', *Information Processing & Management*, 45(4), pp. 427–437.
+
+### Software Documentation
+
+- Keras Documentation. Available at: https://keras.io/ (Accessed: January 2025).
+
+- scikit-learn Documentation. Available at: https://scikit-learn.org/ (Accessed: January 2025).
+
+- O'Malley, T. et al. (2019) *Keras Tuner*. Available at: https://github.com/keras-team/keras-tuner (Accessed: January 2025).
 
 ---
 
