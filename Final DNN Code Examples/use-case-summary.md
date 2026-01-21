@@ -1,8 +1,12 @@
 # DNN Code Examples - Use Case Summary
 
-This document summarizes the Deep Neural Network code examples, organized by use case type. Each example follows the **Universal ML Workflow** from Chapter 4.5 of "Deep Learning with Python".
+This document summarizes the 10 Deep Neural Network code examples in this folder. Each notebook is a **standalone learning resource** that follows the **Universal ML Workflow** and can be used independently.
 
-## Universal ML Workflow Steps
+---
+
+## Universal ML Workflow
+
+All notebooks follow the same 7-step workflow from Chapter 4.5 of *Deep Learning with Python* (Chollet, 2021):
 
 1. **Defining the problem and assembling a dataset**
 2. **Choosing a measure of success**
@@ -10,178 +14,280 @@ This document summarizes the Deep Neural Network code examples, organized by use
 4. **Preparing your data**
 5. **Developing a model that does better than a baseline**
 6. **Scaling up: developing a model that overfits**
-7. **Regularizing your model and tuning your hyperparameters**
+7. **Regularising your model and tuning your hyperparameters**
 
 ---
 
-## 1. Twitter US Airline Sentiment - NLP Example
+## Design Principles
 
-📁 **Folder:** `Twitter US Airline Sentiment/`
+All notebooks follow consistent, data-driven design principles:
 
-| Attribute | Description |
-|-----------|-------------|
-| **Problem Type** | Multi-Class (3) Classification |
-| **Data Balance** | Imbalanced |
-| **Data Type** | Unstructured (Tweets/Text) |
-| **Input Features** | TF-IDF Vectors converted from Tweets |
-| **Output** | Multi-Class Probabilities |
-| **Imbalance Handling** | Class Weights during Training |
-| **Data File** | `Tweets.csv` |
+### Batch Size Selection
 
----
+| Dataset Size | Batch Size | Rationale |
+|--------------|------------|-----------|
+| > 10,000 samples | **512** | Efficient GPU utilisation |
+| < 10,000 samples | **32-64** | Better gradient estimates for small data |
 
-## 2. Rain in Australia - Mixed Feature Type & Missing Value Example
+### Validation Protocol
 
-📁 **Folder:** `Rain in Australia/`
+| Dataset Size | Protocol | Rationale |
+|--------------|----------|-----------|
+| > 10,000 samples | **Hold-Out** (10%) | Sufficient data for reliable estimates |
+| < 10,000 samples | **K-Fold** (5 folds) | Reduces variance in small datasets |
 
-| Attribute | Description |
-|-----------|-------------|
-| **Problem Type** | Binary Classification |
-| **Data Balance** | Imbalanced with Missing Values |
-| **Data Type** | Structured (Mixed Categorical & Numerical) |
-| **Missing Data Handling** | kNN Imputing (Numerical), Fill with "Unknown" (Categorical) |
-| **Input Features** | One-Hot Encoding (Categorical) + Standardisation (Numerical) |
-| **Output** | Binary |
-| **Imbalance Handling** | Class Weights during Training |
-| **Data File** | `weatherAUS.csv` |
+*Reference: Kohavi (1995)*
 
----
+### Primary Metric Selection
 
-## 3. German Credit Data - SMOTE Example
+| Class Imbalance | Primary Metric | Rationale |
+|-----------------|----------------|-----------|
+| < 3:1 ratio | **Accuracy** | Classes roughly balanced |
+| > 3:1 ratio | **F1-Score** | Accuracy becomes misleading |
 
-📁 **Folder:** `German Credit Data/`
+*Reference: He and Garcia (2009)*
 
-| Attribute | Description |
-|-----------|-------------|
-| **Problem Type** | Binary Classification |
-| **Data Balance** | Imbalanced |
-| **Data Type** | Structured (Mixed Categorical & Numerical) |
-| **Input Features** | One-Hot Encoding (Categorical) + Standardisation (Numerical) |
-| **Output** | Binary |
-| **Imbalance Handling** | SMOTE to up-sample minority class; train on balanced data, validate on imbalanced data |
+### Image Preprocessing
 
----
+All image notebooks use: **Resize to 32×32 → Grayscale → Flatten → Normalise**
 
-## 4. ASL Sign Language - Image Classification Example
+### Architecture
 
-📁 **Folder:** `ASL Sign Language/`
+All notebooks use **1 hidden layer with 64 neurons** and demonstrate:
+- Why this architecture is sufficient (capacity to overfit)
+- Why more layers aren't needed (regularise, don't expand)
 
-| Attribute | Description |
-|-----------|-------------|
-| **Problem Type** | Multi-Class (3) Classification |
-| **Data Balance** | Balanced |
-| **Data Type** | Unstructured (Images) |
-| **Input Features** | Flattened Gray-Scale Images |
-| **Preprocessing** | Color Image (3D) → Gray-Scale → 2D Array → 1D Array |
-| **Output** | Multi-Class Probabilities |
+### Regularisation
 
----
-
-## 5. Bike Sharing - Regression Example
-
-📁 **Folder:** `Bike Sharing/`
-
-| Attribute | Description |
-|-----------|-------------|
-| **Problem Type** | Regression |
-| **Data Type** | Structured (Mixed Categorical & Numerical) |
-| **Input Features** | One-Hot Encoding (Categorical) + Standardisation (Numerical) |
-| **Output** | Real Value (Predicted Bike Demand) |
-| **Data File** | `Bike Sharing.csv` |
-
----
-
-## 6. Imagenette - TFDS Color Image Example
-
-📁 **Folder:** `Imagenette/`
-
-| Attribute | Description |
-|-----------|-------------|
-| **Problem Type** | Multi-Class (10) Image Classification |
-| **Data Balance** | Balanced (minimally off-balanced) |
-| **Data Type** | Unstructured (Color Images) |
-| **Dataset** | TensorFlow Dataset: `imagenette/160px` |
-| **Input Features** | Flattened Gray-Scale Images |
-| **Preprocessing** | Color Image (3D) → Gray-Scale → 2D Array → 1D Array |
-| **Output** | Multi-Class Probabilities, Top-N Accuracy |
-
----
-
-## 7. Movie Review - NLP Binary Classification Example
-
-📁 **Folder:** `Movie Review/`
-
-| Attribute | Description |
-|-----------|-------------|
-| **Problem Type** | Binary Classification |
-| **Data Balance** | Nearly Balanced (~51:49) |
-| **Data Type** | Unstructured (Text/Reviews) |
-| **Input Features** | TF-IDF Vectors converted from Text |
-| **Output** | Probabilities |
-| **Imbalance Handling** | Class Weights (optional - works fine without due to near-balance) |
-| **Data File** | `movie_review.csv` |
-
-> **Note**: Class weights are included in the code for reusability with other imbalanced datasets.
-
----
-
-## 8. CatVsDog - TFDS Color Image Binary Classification Example
-
-📁 **Folder:** `CatVsDog/`
-
-| Attribute | Description |
-|-----------|-------------|
-| **Problem Type** | Binary Image Classification |
-| **Data Balance** | Nearly Balanced |
-| **Data Type** | Unstructured (Color Images) |
-| **Dataset** | TensorFlow Dataset: `cats_vs_dogs` |
-| **Input Features** | Flattened Gray-Scale Images |
-| **Preprocessing** | Color Image (3D) → Gray-Scale → 2D Array → 1D Array |
-| **Output** | Binary Probabilities |
-
----
-
-## 9. Fashion MNIST - TFDS Gray-Scaled Image Example
-
-📁 **Folder:** `Fashion MNIST/`
-
-| Attribute | Description |
-|-----------|-------------|
-| **Problem Type** | Multi-Class (10) Image Classification |
-| **Data Balance** | Balanced |
-| **Data Type** | Unstructured (Gray-Scale Images) |
-| **Dataset** | TensorFlow Dataset: `fashion_mnist` |
-| **Input Features** | Flattened Gray-Scale Images (28×28 → 784) |
-| **Output** | Multi-Class Probabilities |
-
----
-
-## 10. Twitter Sentiment Analysis - Grid Search Example
-
-📁 **Folder:** `Twitter Sentiment Grid Search/`
-
-| Attribute | Description |
-|-----------|-------------|
-| **Problem Type** | Multi-Class Classification |
-| **Data Type** | Unstructured (Tweets/Text) |
-| **Input Features** | TF-IDF Vectors |
-| **Output** | Multi-Class Probabilities |
-| **Special Focus** | Comprehensive Grid Search for Hyperparameter Tuning |
-| **Data File** | `twitter.csv` |
+All notebooks use **Dropout + L2** without early stopping, and explain:
+- Why regularised models train longer (150 vs 100 epochs)
+- *"Regularisation buys you the freedom to train longer."*
 
 ---
 
 ## Quick Reference Table
 
-| # | Example | Problem Type | Data Type | Imbalance Handling | Folder |
-|---|---------|--------------|-----------|-------------------|--------|
-| 1 | Twitter US Airline | Multi-Class (3) | Text (NLP) | Class Weights | `Twitter US Airline Sentiment/` |
-| 2 | Rain in Australia | Binary | Mixed Structured | Class Weights | `Rain in Australia/` |
-| 3 | German Credit | Binary | Mixed Structured | SMOTE | `German Credit Data/` |
-| 4 | ASL Sign Language | Multi-Class (3) | Images | N/A (Balanced) | `ASL Sign Language/` |
-| 5 | Bike Sharing | Regression | Mixed Structured | N/A | `Bike Sharing/` |
-| 6 | Imagenette | Multi-Class (10) | Color Images (TFDS) | N/A (Balanced) | `Imagenette/` |
-| 7 | Movie Review | Binary | Text (NLP) | Class Weights (Optional) | `Movie Review/` |
-| 8 | CatVsDog | Binary | Color Images (TFDS) | N/A (Balanced) | `CatVsDog/` |
-| 9 | Fashion MNIST | Multi-Class (10) | Gray Images (TFDS) | N/A (Balanced) | `Fashion MNIST/` |
-| 10 | Twitter Grid Search | Multi-Class | Text (NLP) | Grid Search Focus | `Twitter Sentiment Grid Search/` |
+| # | Use Case | Problem Type | Data Type | Samples | Batch | Validation | Metric |
+|---|----------|--------------|-----------|---------|-------|------------|--------|
+| 1 | Twitter US Airline | 3-class NLP | Text | 14,640 | 512 | Hold-Out | F1 |
+| 2 | Twitter Entity | 4-class NLP | Text | 74,682 | 512 | Hold-Out | F1 |
+| 3 | Movie Review | Binary NLP | Text | 65,000 | 512 | Hold-Out | Accuracy |
+| 4 | Rain in Australia | Binary | Mixed Tabular | 142,193 | 512 | Hold-Out | F1 |
+| 5 | German Credit | Binary + SMOTE | Mixed Tabular | 1,000 | 32 | K-Fold | AUC |
+| 6 | Bike Sharing | Regression | Mixed Tabular | 731 | 32 | K-Fold | MAE |
+| 7 | Fashion MNIST | 10-class Image | Grayscale | 70,000 | 512 | Hold-Out | Accuracy |
+| 8 | Imagenette | 10-class Image | Colour | 13,000 | 512 | Hold-Out | Accuracy |
+| 9 | CatVsDog | Binary Image | Colour | 23,000 | 512 | Hold-Out | Accuracy |
+| 10 | ASL Sign Language | 3-class Image | Colour | 9,000 | 64 | K-Fold | Accuracy |
+
+---
+
+## Detailed Use Case Descriptions
+
+### 1. Twitter US Airline Sentiment - NLP Example (Benchmark)
+
+📁 **Folder:** `Twitter US Airline Sentiment/`
+
+| Attribute | Description |
+|-----------|-------------|
+| **Problem Type** | Multi-Class Classification (3 classes: Positive, Negative, Neutral) |
+| **Data Balance** | Imbalanced (3.88:1 ratio) |
+| **Data Type** | Unstructured Text (Tweets) |
+| **Samples** | 14,640 |
+| **Input Features** | TF-IDF Vectors (5,000 features, bigrams) |
+| **Primary Metric** | F1-Score (imbalanced) |
+| **Imbalance Handling** | Class Weights |
+| **Special Features** | Benchmark notebook; TF-IDF design rationale tables |
+
+---
+
+### 2. Twitter Entity Sentiment - NLP Example
+
+📁 **Folder:** `Twitter Entity Sentiment/`
+
+| Attribute | Description |
+|-----------|-------------|
+| **Problem Type** | Multi-Class Classification (4 classes: Positive, Negative, Neutral, Irrelevant) |
+| **Data Balance** | Mild Imbalance (1.7:1 ratio) |
+| **Data Type** | Unstructured Text (Tweets) |
+| **Samples** | 74,682 |
+| **Input Features** | TF-IDF Vectors (5,000 features, bigrams) |
+| **Primary Metric** | F1-Score |
+| **Imbalance Handling** | Class Weights |
+| **Special Features** | Entity-level sentiment; 4-class softmax |
+
+---
+
+### 3. Movie Review - NLP Binary Classification Example
+
+📁 **Folder:** `Movie Review/`
+
+| Attribute | Description |
+|-----------|-------------|
+| **Problem Type** | Binary Classification (Positive/Negative) |
+| **Data Balance** | Nearly Balanced (~51:49) |
+| **Data Type** | Unstructured Text (Movie Reviews) |
+| **Samples** | ~65,000 |
+| **Input Features** | TF-IDF Vectors (5,000 features, bigrams) |
+| **Primary Metric** | Accuracy (balanced) |
+| **Output Layer** | 1 neuron, sigmoid activation |
+| **Special Features** | Binary vs multi-class comparison; threshold at 0.5 |
+
+---
+
+### 4. Rain in Australia - Mixed Feature Type & Missing Value Example
+
+📁 **Folder:** `Rain in Australia/`
+
+| Attribute | Description |
+|-----------|-------------|
+| **Problem Type** | Binary Classification (Rain Tomorrow: Yes/No) |
+| **Data Balance** | Imbalanced (3.51:1 ratio) |
+| **Data Type** | Structured Tabular (Mixed Categorical & Numerical) |
+| **Samples** | 142,193 |
+| **Missing Data** | kNN Imputation (Numerical), "Unknown" category (Categorical) |
+| **Input Features** | One-Hot Encoding + StandardScaler via ColumnTransformer |
+| **Primary Metric** | F1-Score (imbalanced) |
+| **Imbalance Handling** | Class Weights |
+| **Special Features** | ColumnTransformer pipeline; missing value strategies |
+
+---
+
+### 5. German Credit Data - SMOTE Example
+
+📁 **Folder:** `German Credit Data/`
+
+| Attribute | Description |
+|-----------|-------------|
+| **Problem Type** | Binary Classification (Credit Risk: Good/Bad) |
+| **Data Balance** | Imbalanced (2.33:1 ratio) |
+| **Data Type** | Structured Tabular (Mixed Categorical & Numerical) |
+| **Samples** | 1,000 |
+| **Input Features** | One-Hot Encoding + StandardScaler |
+| **Primary Metric** | AUC (industry standard for credit scoring) |
+| **Imbalance Handling** | SMOTE (applied only to training folds) |
+| **Validation** | 5-Fold Cross-Validation (small dataset) |
+| **Special Features** | Lift Curves; SMOTE methodology; AUC vs F1 rationale |
+
+---
+
+### 6. Bike Sharing - Regression Example
+
+📁 **Folder:** `Bike Sharing/`
+
+| Attribute | Description |
+|-----------|-------------|
+| **Problem Type** | Regression (Predict bike rental count) |
+| **Data Type** | Structured Tabular (Mixed Categorical & Numerical) |
+| **Samples** | 731 |
+| **Target Range** | 22 to 8,714 rentals/day |
+| **Input Features** | One-Hot Encoding + StandardScaler |
+| **Primary Metric** | MAE (interpretable in original units) |
+| **Output Layer** | 1 neuron, linear activation |
+| **Validation** | 5-Fold Cross-Validation (small dataset) |
+| **Special Features** | Regression vs classification comparison; MAE/RMSE/R² metrics |
+
+---
+
+### 7. Fashion MNIST - TFDS Grayscale Image Example
+
+📁 **Folder:** `Fashion MNIST/`
+
+| Attribute | Description |
+|-----------|-------------|
+| **Problem Type** | Multi-Class Classification (10 clothing categories) |
+| **Data Balance** | Balanced |
+| **Data Type** | Unstructured Images (Grayscale) |
+| **Dataset Source** | TensorFlow Datasets: `fashion_mnist` |
+| **Samples** | 70,000 |
+| **Preprocessing** | Resize 28×28 → 32×32 → Flatten (1,024 features) |
+| **Primary Metric** | Accuracy (balanced) |
+| **Special Features** | Top-K accuracy; grayscale simplifies processing |
+
+---
+
+### 8. Imagenette - TFDS Colour Image Example
+
+📁 **Folder:** `Imagenette/`
+
+| Attribute | Description |
+|-----------|-------------|
+| **Problem Type** | Multi-Class Classification (10 object categories) |
+| **Data Balance** | Nearly Balanced |
+| **Data Type** | Unstructured Images (Colour) |
+| **Dataset Source** | TensorFlow Datasets: `imagenette/160px` |
+| **Samples** | ~13,000 |
+| **Preprocessing** | Resize 160×160 → 32×32 → Grayscale → Flatten (1,024 features) |
+| **Primary Metric** | Accuracy |
+| **Special Features** | Real-world photos; harder than synthetic datasets; ImageNet subset |
+
+---
+
+### 9. CatVsDog - TFDS Colour Binary Image Example
+
+📁 **Folder:** `CatVsDog/`
+
+| Attribute | Description |
+|-----------|-------------|
+| **Problem Type** | Binary Image Classification (Cat vs Dog) |
+| **Data Balance** | Balanced (~50:50) |
+| **Data Type** | Unstructured Images (Colour) |
+| **Dataset Source** | TensorFlow Datasets: `cats_vs_dogs` |
+| **Samples** | ~23,000 |
+| **Preprocessing** | Resize → 32×32 → Grayscale → Flatten (1,024 features) |
+| **Output Layer** | 1 neuron, sigmoid activation |
+| **Primary Metric** | Accuracy (balanced) |
+| **Special Features** | Binary vs multi-class image classification comparison |
+
+---
+
+### 10. ASL Sign Language - Image Classification Example
+
+📁 **Folder:** `ASL Sign Language/`
+
+| Attribute | Description |
+|-----------|-------------|
+| **Problem Type** | Multi-Class Classification (3 letters: A, B, C) |
+| **Data Balance** | Perfectly Balanced (3,000 per class) |
+| **Data Type** | Unstructured Images (Colour) |
+| **Samples** | 9,000 |
+| **Preprocessing** | Resize → 32×32 → Grayscale → Flatten (1,024 features) |
+| **Primary Metric** | Accuracy (balanced) |
+| **Validation** | 5-Fold Cross-Validation (below 10k threshold) |
+| **Special Features** | Custom image loading from zip; K-Fold demonstration |
+
+---
+
+## Notebooks by Category
+
+### NLP (Text Classification)
+| Notebook | Classes | Key Learning |
+|----------|---------|--------------|
+| Twitter US Airline | 3 | TF-IDF design rationale; benchmark quality |
+| Twitter Entity | 4 | 4-class softmax; entity-level sentiment |
+| Movie Review | 2 (binary) | Binary vs multi-class NLP comparison |
+
+### Tabular Data
+| Notebook | Problem | Key Learning |
+|----------|---------|--------------|
+| Rain in Australia | Binary | ColumnTransformer; missing values; kNN imputation |
+| German Credit | Binary | SMOTE; Lift Curves; AUC for credit scoring |
+| Bike Sharing | Regression | MAE/RMSE/R²; linear output; K-Fold for small data |
+
+### Image Classification
+| Notebook | Classes | Key Learning |
+|----------|---------|--------------|
+| Fashion MNIST | 10 | Grayscale preprocessing; Top-K accuracy |
+| Imagenette | 10 | Real-world images; TFDS; harder than synthetic |
+| CatVsDog | 2 (binary) | Binary image classification; sigmoid output |
+| ASL Sign Language | 3 | Custom data loading; K-Fold for images |
+
+---
+
+## References
+
+- Chollet, F. (2021) *Deep learning with Python*. 2nd edn. Shelter Island, NY: Manning Publications.
+
+- He, H. and Garcia, E.A. (2009) 'Learning from imbalanced data', *IEEE Transactions on Knowledge and Data Engineering*, 21(9), pp. 1263–1284.
+
+- Kohavi, R. (1995) 'A study of cross-validation and bootstrap for accuracy estimation and model selection', *IJCAI*, 2, pp. 1137–1145.
