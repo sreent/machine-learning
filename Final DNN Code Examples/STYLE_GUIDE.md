@@ -7,15 +7,16 @@ This style guide establishes quality standards for all notebooks in the `Final D
 ## Table of Contents
 
 1. [Core Principles](#1-core-principles)
-2. [Notebook Structure](#2-notebook-structure)
-3. [Narrative Standards](#3-narrative-standards)
-4. [Code Standards](#4-code-standards)
-5. [Design Decision Documentation](#5-design-decision-documentation)
-6. [Data-Driven Decisions](#6-data-driven-decisions)
-7. [British English Conventions](#7-british-english-conventions)
-8. [Reference Formatting](#8-reference-formatting)
-9. [Problem-Type Adaptations](#9-problem-type-adaptations)
-10. [Quality Checklist](#10-quality-checklist)
+2. [Code Reuse Philosophy](#2-code-reuse-philosophy)
+3. [Notebook Structure](#3-notebook-structure)
+4. [Narrative Standards](#4-narrative-standards)
+5. [Code Standards](#5-code-standards)
+6. [Design Decision Documentation](#6-design-decision-documentation)
+7. [Data-Driven Decisions](#7-data-driven-decisions)
+8. [British English Conventions](#8-british-english-conventions)
+9. [Reference Formatting](#9-reference-formatting)
+10. [Problem-Type Adaptations](#10-problem-type-adaptations)
+11. [Quality Checklist](#11-quality-checklist)
 
 ---
 
@@ -61,9 +62,93 @@ All notebooks follow the **8-step Universal ML Workflow**:
 
 ---
 
-## 2. Notebook Structure
+## 2. Code Reuse Philosophy
 
-### 2.1 Required Sections
+### 2.1 Core Principle
+
+**The workflow and code are the same across notebooks—only the problem-specific details change.**
+
+This is a deliberate pedagogical choice. When students see the same code patterns applied to different datasets (text, images, tabular data), they learn that:
+- The **Universal ML Workflow** is truly universal
+- Core concepts transfer across problem types
+- Only data loading, preprocessing, and output dimensions need adaptation
+
+### 2.2 What Should Be Consistent
+
+| Component | Approach |
+|-----------|----------|
+| **Imports** | Same import block structure |
+| **Random seeds** | Same `SEED = 204` pattern |
+| **Data-driven analysis** | Same threshold checking code |
+| **Model building** | Same `Sequential` model patterns |
+| **Training configuration** | Same `BATCH_SIZE`, `EPOCHS_*` constants |
+| **Metrics setup** | Same `METRICS` list structure |
+| **Class weights** | Same `compute_class_weight` approach |
+| **Plotting functions** | Same `plot_training_history` function |
+| **Evaluation** | Same `evaluate_model` pattern |
+| **Hyperband setup** | Same tuner configuration style |
+
+### 2.3 What Changes Per Problem
+
+| Component | What Changes |
+|-----------|--------------|
+| **Data URL/path** | Different source per dataset |
+| **Column selection** | Dataset-specific columns |
+| **Preprocessing** | TF-IDF for text, normalisation for images, etc. |
+| **Input dimension** | `X_train.shape[1]` adapts automatically |
+| **Output classes** | `y_train.shape[1]` adapts automatically |
+| **Class names** | Dataset-specific labels |
+| **Imbalance ratio** | Computed from data |
+| **Narrative context** | Problem-specific explanations |
+
+### 2.4 Reference Implementation
+
+The **Twitter US Airline Sentiment** notebook is the reference implementation. When creating a new notebook:
+
+1. **Copy the reference notebook** as a starting point
+2. **Update only what's necessary:**
+   - Dataset loading and description
+   - Column names and class labels
+   - Problem-specific narrative sections
+   - Any unique preprocessing requirements
+3. **Keep everything else identical:**
+   - Helper functions
+   - Training patterns
+   - Evaluation code
+   - Plotting functions
+
+This approach:
+- Reduces errors (tested code is reused)
+- Maintains consistency across the collection
+- Helps students recognise transferable patterns
+- Makes maintenance easier (fix once, apply everywhere)
+
+### 2.5 Example: Adapting for a New Dataset
+
+```python
+# SAME across all notebooks:
+SEED = 204
+tf.random.set_seed(SEED)
+np.random.seed(SEED)
+
+BATCH_SIZE = 512
+EPOCHS_BASELINE = 100
+EPOCHS_REGULARIZED = 150
+
+OPTIMIZER = 'adam'
+LOSS_FUNC = 'categorical_crossentropy'
+METRICS = ['categorical_accuracy', ...]
+
+# CHANGES per notebook:
+GDRIVE_FILE_ID = 'your_file_id_here'  # Different per dataset
+DATA_URL = f'https://drive.google.com/uc?id={GDRIVE_FILE_ID}&export=download'
+```
+
+---
+
+## 3. Notebook Structure
+
+### 3.1 Required Sections
 
 Every notebook must include these sections in order:
 
@@ -84,7 +169,7 @@ Every notebook must include these sections in order:
 14. Appendix: Modular Helper Functions (optional)
 ```
 
-### 2.2 Opening Section Template
+### 3.2 Opening Section Template
 
 ```markdown
 <Colab Badge>
@@ -132,7 +217,7 @@ This notebook uses only techniques from **Chapters 1–4** of *Deep Learning wit
 ---
 ```
 
-### 2.3 Key Takeaways Section Template
+### 3.3 Key Takeaways Section Template
 
 ```markdown
 ## 9. Key Takeaways
@@ -157,16 +242,16 @@ This notebook uses only techniques from **Chapters 1–4** of *Deep Learning wit
 
 ---
 
-## 3. Narrative Standards
+## 4. Narrative Standards
 
-### 3.1 Explanation Depth
+### 10.1 Explanation Depth
 
 Every significant choice must be explained with:
 - **What:** What we're doing
 - **Why:** Why this approach (not just "it's common practice")
 - **Trade-offs:** What we gain and lose
 
-### 3.2 Formatting Conventions
+### 10.2 Formatting Conventions
 
 | Element | Format |
 |---------|--------|
@@ -177,7 +262,7 @@ Every significant choice must be explained with:
 | Comparisons | Tables |
 | Step-by-step processes | Numbered lists |
 
-### 3.3 Blockquote Usage
+### 6.3 Blockquote Usage
 
 Use blockquotes for memorable insights:
 
@@ -185,7 +270,7 @@ Use blockquotes for memorable insights:
 > *"Regularisation adds noise and constraints that slow down learning. In exchange for protection against overfitting, the model needs more iterations to converge."*
 ```
 
-### 3.4 Section Transitions
+### 5.4 Section Transitions
 
 Each section should:
 - Start with a brief explanation of what we're doing and why
@@ -194,9 +279,9 @@ Each section should:
 
 ---
 
-## 4. Code Standards
+## 5. Code Standards
 
-### 4.1 Constants and Configuration
+### 10.1 Constants and Configuration
 
 Define all constants at the top of the relevant section:
 
@@ -210,7 +295,7 @@ EPOCHS_BASELINE = 100      # SLP and DNN (no regularisation)
 EPOCHS_REGULARIZED = 150   # DNN with Dropout + L2
 ```
 
-### 4.2 Comment Standards
+### 10.2 Comment Standards
 
 ```python
 # Good: Explains WHY
@@ -220,7 +305,7 @@ EPOCHS_REGULARIZED = 150   # DNN with Dropout + L2
 # Set epochs to 150
 ```
 
-### 4.3 Magic Number Guidelines
+### 6.3 Magic Number Guidelines
 
 | Type | Guideline |
 |------|-----------|
@@ -234,7 +319,7 @@ HOLDOUT_THRESHOLD = 10000  # Use hold-out if samples > 10,000 (Kohavi, 1995)
 IMBALANCE_THRESHOLD = 3.0  # Use F1-Score if ratio > 3.0 (He & Garcia, 2009)
 ```
 
-### 4.4 Output Formatting
+### 5.4 Output Formatting
 
 ```python
 # Use clear headers for important outputs
@@ -246,7 +331,7 @@ print("=" * 60)
 print(f'F1-Score (Validation): {f1_score:.2f}  ← Primary Metric')
 ```
 
-### 4.5 Package Installation
+### 5.5 Package Installation
 
 Use `%pip` instead of `!pip` for Colab compatibility:
 
@@ -258,7 +343,7 @@ Use `%pip` instead of `!pip` for Colab compatibility:
 !pip install -q -U keras-tuner
 ```
 
-### 4.6 Prediction Consistency
+### 5.6 Prediction Consistency
 
 Always use `argmax` for storing predictions (not probabilities):
 
@@ -270,9 +355,9 @@ preds_test = model.predict(X_test, verbose=0).argmax(axis=1)
 
 ---
 
-## 5. Design Decision Documentation
+## 6. Design Decision Documentation
 
-### 5.1 Required Design Decisions
+### 10.1 Required Design Decisions
 
 Document these choices in every notebook:
 
@@ -286,7 +371,7 @@ Document these choices in every notebook:
 | **Training** | Batch size, epochs, optimiser |
 | **Imbalance** | Class weights vs SMOTE vs undersampling |
 
-### 5.2 Comparison Table Format
+### 10.2 Comparison Table Format
 
 ```markdown
 #### Why [Choice A] Instead of [Choice B]?
@@ -302,7 +387,7 @@ We use **[Choice A]** because:
 3. [Reason 3]
 ```
 
-### 5.3 Architecture Decision Template
+### 6.3 Architecture Decision Template
 
 ```markdown
 #### Why [N] neurons in the hidden layer?
@@ -324,9 +409,9 @@ Per the **Universal ML Workflow**, the goal is to demonstrate that the model *ca
 
 ---
 
-## 6. Data-Driven Decisions
+## 7. Data-Driven Decisions
 
-### 6.1 Standard Thresholds
+### 10.1 Standard Thresholds
 
 Use these thresholds with citations:
 
@@ -336,7 +421,7 @@ Use these thresholds with citations:
 | Accuracy vs F1-Score | > 3:1 imbalance ratio | He and Garcia (2009) |
 | Severe imbalance | > 10:1 ratio | Branco et al. (2016) |
 
-### 6.2 Data-Driven Code Block
+### 10.2 Data-Driven Code Block
 
 ```python
 # =============================================================================
@@ -358,9 +443,9 @@ print(f"Imbalance ratio: {imbalance_ratio:.2f}:1 → {'F1-Score' if use_f1 else 
 
 ---
 
-## 7. British English Conventions
+## 8. British English Conventions
 
-### 7.1 Spelling
+### 10.1 Spelling
 
 | American (Avoid) | British (Use) |
 |------------------|---------------|
@@ -374,14 +459,14 @@ print(f"Imbalance ratio: {imbalance_ratio:.2f}:1 → {'F1-Score' if use_f1 else 
 | parallelizable | parallelisable |
 | color | colour |
 
-### 7.2 Exceptions
+### 10.2 Exceptions
 
 Keep American spelling for:
 - **API/library names:** `optimizer=`, `regularizers.l2()`, `OPTIMIZER`
 - **Function names:** `TfidfVectorizer`
 - **Error messages from libraries**
 
-### 7.3 Narrative Examples
+### 10.3 Narrative Examples
 
 ```markdown
 # Good
@@ -394,9 +479,9 @@ The model uses **Dropout + L2 regularization** to prevent overfitting.
 
 ---
 
-## 8. Reference Formatting
+## 9. Reference Formatting
 
-### 8.1 Harvard Style
+### 10.1 Harvard Style
 
 Use Harvard referencing for all citations:
 
@@ -410,7 +495,7 @@ Use Harvard referencing for all citations:
 - Kohavi, R. (1995) 'A study of cross-validation and bootstrap for accuracy estimation and model selection', *IJCAI*, 2, pp. 1137–1145.
 ```
 
-### 8.2 In-Text Citations
+### 10.2 In-Text Citations
 
 ```markdown
 # Parenthetical
@@ -420,7 +505,7 @@ This threshold is a practical guideline (He and Garcia, 2009).
 He and Garcia (2009) suggest using F1-Score for imbalanced data.
 ```
 
-### 8.3 Required References
+### 10.3 Required References
 
 Every notebook should cite:
 - Chollet (2021) - for technique scope and workflow
@@ -428,9 +513,9 @@ Every notebook should cite:
 
 ---
 
-## 9. Problem-Type Adaptations
+## 10. Problem-Type Adaptations
 
-### 9.1 Classification (Multi-Class)
+### 10.1 Classification (Multi-Class)
 
 | Element | Standard |
 |---------|----------|
@@ -439,7 +524,7 @@ Every notebook should cite:
 | Output activation | `softmax` |
 | Label encoding | One-hot (`to_categorical`) |
 
-### 9.2 Classification (Binary)
+### 10.2 Classification (Binary)
 
 | Element | Standard |
 |---------|----------|
@@ -448,7 +533,7 @@ Every notebook should cite:
 | Output activation | `sigmoid` |
 | Label encoding | Single column (0/1) |
 
-### 9.3 Regression
+### 10.3 Regression
 
 | Element | Standard |
 |---------|----------|
@@ -457,7 +542,7 @@ Every notebook should cite:
 | Output activation | `linear` (none) |
 | Evaluation | No class imbalance; consider target distribution |
 
-### 9.4 Imbalanced Data
+### 10.4 Imbalanced Data
 
 | Imbalance Ratio | Handling |
 |-----------------|----------|
@@ -465,7 +550,7 @@ Every notebook should cite:
 | 3:1 – 10:1 | Class weights |
 | > 10:1 | Class weights + consider SMOTE |
 
-### 9.5 Image Data (Flattened)
+### 10.5 Image Data (Flattened)
 
 | Element | Standard |
 |---------|----------|
@@ -473,7 +558,7 @@ Every notebook should cite:
 | Input dimension | height × width × channels |
 | Note in narrative | Explain why not using CNN (Ch. 1-4 scope) |
 
-### 9.6 Text Data
+### 10.6 Text Data
 
 | Element | Standard |
 |---------|----------|
@@ -483,7 +568,7 @@ Every notebook should cite:
 
 ---
 
-## 10. Quality Checklist
+## 11. Quality Checklist
 
 Use this checklist before finalising any notebook:
 
