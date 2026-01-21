@@ -1,338 +1,553 @@
 # Deep Neural Network Coursework - Frequently Asked Questions
 
-> **Note:** This FAQ accompanies the Final DNN Code Examples and follows the Universal ML Workflow from *Deep Learning with Python* (Chollet, 2021).
+> This FAQ accompanies the Final DNN Code Examples and follows the Universal ML Workflow from *Deep Learning with Python* (Chollet, 2021).
 
 ---
 
 ## Table of Contents
 
-1. [Dataset Selection](#1-dataset-selection)
-2. [Network Architecture](#2-network-architecture)
-3. [Training Issues](#3-training-issues)
-4. [Universal ML Workflow](#4-universal-ml-workflow)
-5. [Hyperparameter Tuning](#5-hyperparameter-tuning)
-6. [Common Questions](#6-common-questions)
+1. [Getting Started](#1-getting-started)
+2. [Dataset Selection](#2-dataset-selection)
+3. [Model Architecture](#3-model-architecture)
+4. [Training Problems](#4-training-problems)
+5. [Metrics & Evaluation](#5-metrics--evaluation)
+6. [Class Imbalance](#6-class-imbalance)
+7. [Hyperparameter Tuning](#7-hyperparameter-tuning)
+8. [Common Errors](#8-common-errors)
+9. [Write-up & Submission](#9-write-up--submission)
+10. [Quick Reference](#10-quick-reference)
 
 ---
 
-## 1. Dataset Selection
+## 1. Getting Started
 
-### What kind of datasets work well for this coursework?
+### What are the constraints for this coursework?
 
-Since we are limited to **Dense and Dropout layers only**, certain dataset types are more suitable:
+You must use **only** techniques from DLWP Chapters 1-4:
 
-| Dataset Type | Suitability | Examples |
-|--------------|-------------|----------|
-| **Structured/Tabular (CSV)** | Excellent | Boston Housing, Bike Sharing |
-| **Sentiment Analysis (NLP)** | Good | Twitter Sentiment, IMDB Reviews |
-| **Simple Images** | Acceptable | MNIST, Fashion MNIST |
-| **Complex Images** | Poor | CIFAR-100, ImageNet |
-| **Temporal/Sequential** | Poor | Time series, Language modelling |
+| Allowed | Not Allowed |
+|---------|-------------|
+| Dense layers | CNNs (Conv2D) |
+| Dropout layers | RNNs (LSTM, GRU) |
+| L1/L2 regularisation | Transformers |
+| Adam, SGD optimisers | Early Stopping* |
+| Softmax, ReLU, Sigmoid | Pre-trained models |
 
-**Recommended datasets:**
+*Early Stopping may be restricted depending on your specific assignment.
 
-- **Structured data** - CSV format works best with Dense layers
-- **Sentiment analysis** - Ignore word order, use Bag-of-Words or TF-IDF vectorisation
-- **MNIST-type images** - Low variety, easy to classify (considered "toy datasets")
-- **Balanced classes** - Easier to train; imbalanced data requires extra techniques
+### What should my notebook look like?
 
-**Datasets to avoid:**
+Your notebook should read as a **report**, not just code:
 
-- High-variety images (require CNNs)
-- Sequential/temporal data (require RNNs/LSTMs)
-- Severely imbalanced classes (hard to beat baseline with Dense networks)
+```
+✓ Introduction (problem, motivation, dataset)
+✓ Methodology sections with explanations
+✓ Tables and visualisations
+✓ Analysis and interpretation
+✓ Conclusions
+✓ Code attribution
+✓ References
+```
 
-### Why do large datasets (>10,000 samples) train more stably?
+### Which workflow should I follow?
 
-With large datasets:
-- Training is very stable with minimal fluctuation
-- Validation metrics are consistent
-- Hold-out validation is sufficient (no need for K-Fold)
+Follow the **Universal ML Workflow** (Chollet, 2021):
+
+1. Define the problem & assemble dataset
+2. Choose a measure of success
+3. Decide on an evaluation protocol
+4. Prepare your data
+5. Develop a model better than baseline
+6. Scale up: develop a model that overfits
+7. Regularise and tune hyperparameters
 
 ---
 
-## 2. Network Architecture
+## 2. Dataset Selection
 
-### How many hidden layers should I use?
+### What datasets work well with Dense layers?
 
-With Dense and Dropout layers only (Multi-Layer Perceptrons):
+| Dataset Type | Suitability | Why |
+|--------------|-------------|-----|
+| **Tabular/CSV** | Excellent | Dense layers designed for this |
+| **Sentiment Analysis** | Good | TF-IDF ignores word order |
+| **MNIST-type images** | Good | Simple, low variety |
+| **Complex images** | Poor | Need CNNs for spatial features |
+| **Time series** | Poor | Need RNNs for temporal patterns |
 
-| Data Type | Recommended Hidden Layers |
-|-----------|---------------------------|
-| Structured/Tabular | 0-1 |
-| Sentiment Analysis | 0-1 |
-| Simple Images | 1-2 |
+### What if my dataset is imbalanced?
 
-**Key points:**
-- Rarely need more than 2 hidden layers
-- Going beyond 2 requires massive amounts of data
-- For small datasets, 0 or 1 hidden layers gives more stable performance
-- Sometimes 0 hidden layers (SLP) gives the best result!
+Imbalanced data (e.g., 90% class A, 10% class B) is challenging but manageable:
 
-### How many neurons should I use in hidden layers?
+1. **Use class weights** - Most important technique
+2. **Use F1-Score** - Not accuracy (see [Section 6](#6-class-imbalance))
+3. **Check confusion matrix** - See per-class performance
 
-**Rules of thumb:**
+### How much data do I need?
 
-1. Number of neurons should be **between input size and output size**
-2. Approximately **2/3 of input size + output size**
-3. **Less than twice** the input size
-4. **More than** the number of output classes
+| Dataset Size | What to Expect |
+|--------------|----------------|
+| < 1,000 | High variance, use K-Fold, keep model simple |
+| 1,000 - 10,000 | Moderate, either K-Fold or Hold-Out |
+| > 10,000 | Stable training, Hold-Out is fine |
 
-**Practical advice:**
+**Rule of thumb:** You need at least 10× more samples than model parameters.
 
-- Use powers of 2: 4, 8, 16, 32, 64, 128, 256...
-- For 10-class classification → at least 16 neurons
-- For 64 input features → try 16 or 32 neurons
-- Start small, scale up only if needed
+---
+
+## 3. Model Architecture
+
+### How many hidden layers do I need?
+
+**Short answer:** Usually 0-2 for this coursework.
+
+| Scenario | Recommended |
+|----------|-------------|
+| Simple tabular data | 0-1 hidden layers |
+| Sentiment analysis | 0-1 hidden layers |
+| Image classification | 1-2 hidden layers |
+
+**Why not more?**
+- Dense networks don't benefit much from depth
+- More layers = harder to train, need more data
+- Overfitting risk increases
+
+### How many neurons per layer?
+
+**Guidelines:**
+
+1. Start with 32-64 neurons
+2. Must be ≥ number of output classes
+3. Usually ≤ number of input features
+4. Use powers of 2: 16, 32, 64, 128...
 
 **Example:**
+```python
+# 100 input features, 3 output classes
+# Try: 32 or 64 neurons
+
+model = Sequential([
+    Dense(64, activation='relu', input_shape=(100,)),
+    Dense(3, activation='softmax')
+])
 ```
-Input: 64 features
-Output: 10 classes
-Hidden neurons: 16-32 (between 10 and 64)
+
+### Which activation function should I use?
+
+| Layer | Activation | When |
+|-------|------------|------|
+| Hidden layers | `relu` | Default choice, works well |
+| Output (multi-class) | `softmax` | Classes are mutually exclusive |
+| Output (binary) | `sigmoid` | Two classes |
+| Output (regression) | `linear` or none | Predicting continuous values |
+
+### Which loss function should I use?
+
+| Problem | Loss Function | Output Activation |
+|---------|---------------|-------------------|
+| Multi-class (one-hot labels) | `categorical_crossentropy` | `softmax` |
+| Multi-class (integer labels) | `sparse_categorical_crossentropy` | `softmax` |
+| Binary classification | `binary_crossentropy` | `sigmoid` |
+| Regression | `mse` or `mae` | `linear`/none |
+
+---
+
+## 4. Training Problems
+
+### My loss is not decreasing at all
+
+**Possible causes and solutions:**
+
+| Symptom | Likely Cause | Solution |
+|---------|--------------|----------|
+| Loss stuck at high value | Learning rate too high | Reduce to 0.0001 |
+| Loss stuck at random-guess level | Model too simple | Add neurons/layers |
+| Loss is NaN | Learning rate way too high | Use 0.0001, check for data issues |
+| Loss jumps around wildly | Learning rate too high | Reduce learning rate |
+
+```python
+# If loss won't decrease, try:
+model.compile(
+    optimizer=Adam(learning_rate=0.0001),  # Lower learning rate
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+```
+
+### My loss decreases but very slowly (straight line)
+
+**The model is learning, but too slowly.**
+
+Solutions:
+1. **Increase learning rate** (e.g., 0.001 → 0.01)
+2. **Increase epochs** (e.g., 100 → 300)
+3. **Reduce batch size** (more gradient updates per epoch)
+
+### Training loss decreases but validation loss increases
+
+**This is overfitting!** Your model is memorising, not learning.
+
+Solutions:
+1. Add **Dropout** (0.2-0.5)
+2. Add **L2 regularisation** (0.001-0.01)
+3. **Reduce** model size (fewer neurons)
+4. Get **more data** (if possible)
+
+```python
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.regularizers import l2
+
+model = Sequential([
+    Dense(64, activation='relu', kernel_regularizer=l2(0.001)),
+    Dropout(0.3),
+    Dense(3, activation='softmax')
+])
+```
+
+### Validation loss is lower than training loss - is this wrong?
+
+**No, this is normal!** Common reasons:
+
+1. **Dropout** - Active during training, disabled during validation
+2. **Easier validation set** - By chance, validation samples are easier
+3. **Regularisation** - Adds penalty to training loss only
+
+This is usually fine. Focus on whether validation loss is stable.
+
+### How many epochs should I use?
+
+| Model Type | Epochs | Rationale |
+|------------|--------|-----------|
+| Baseline (SLP) | 50-100 | Simple model, converges quickly |
+| Overfitting model | 150-200 | Need to clearly see overfitting |
+| Regularised model | 100-200 | Regularisation slows learning |
+
+**Tip:** Watch the validation loss plot. Stop when it plateaus or increases.
+
+---
+
+## 5. Metrics & Evaluation
+
+### Which metric should I use?
+
+| Situation | Primary Metric | Why |
+|-----------|----------------|-----|
+| Balanced classes | Accuracy | All classes equally important |
+| Imbalanced classes | F1-Score (macro) | Accounts for minority classes |
+| Ranking/threshold tuning | AUC | Threshold-independent |
+| Regression | MAE or R² | Interpretable error measure |
+
+### What's the difference between accuracy and F1-Score?
+
+**Example:** Dataset with 95% negative, 5% positive
+
+| Model | Accuracy | F1-Score |
+|-------|----------|----------|
+| Predicts all negative | 95% (looks great!) | 0.00 (terrible!) |
+| Actually learns | 90% | 0.70 (much better) |
+
+**Lesson:** For imbalanced data, accuracy is misleading. Use F1-Score.
+
+### How do I read a confusion matrix?
+
+```
+                 Predicted
+              Neg    Pos
+Actual  Neg   TN     FP    ← FP = False alarms
+        Pos   FN     TP    ← FN = Missed cases
+              ↑
+           FN = Missed
+```
+
+**Good model:** High numbers on diagonal (TN, TP), low off-diagonal (FP, FN)
+
+### What is the naive baseline?
+
+The simplest possible prediction:
+
+| Problem Type | Naive Baseline | Example |
+|--------------|----------------|---------|
+| Balanced 2-class | 50% accuracy | Random guessing |
+| Balanced 3-class | 33% accuracy | Random guessing |
+| Imbalanced (70-30) | 70% accuracy | Always predict majority |
+| Regression | Mean of target | Predict average value |
+
+**Your model must beat this to be useful!**
+
+---
+
+## 6. Class Imbalance
+
+### How do I know if my data is imbalanced?
+
+```python
+# Check class distribution
+print(df['label'].value_counts())
+print(df['label'].value_counts(normalize=True))  # As percentages
+```
+
+| Ratio | Severity |
+|-------|----------|
+| 60-40 | Mild - usually fine |
+| 70-30 | Moderate - use class weights |
+| 90-10 | Severe - definitely use class weights + F1 |
+| 99-1 | Extreme - consider resampling |
+
+### How do I use class weights?
+
+```python
+from sklearn.utils.class_weight import compute_class_weight
+import numpy as np
+
+# Compute weights
+classes = np.unique(y_train)
+weights = compute_class_weight('balanced', classes=classes, y=y_train)
+class_weight = dict(zip(classes, weights))
+
+print(f"Class weights: {class_weight}")
+# Example output: {0: 0.52, 1: 1.89, 2: 3.21}
+
+# Use in training
+model.fit(X_train, y_train, class_weight=class_weight, ...)
+```
+
+**What this does:** Makes the model pay more attention to minority classes.
+
+### Should I use oversampling or undersampling?
+
+For this coursework, **class weights are usually sufficient** and simpler.
+
+If you want to try resampling:
+- **Oversampling** (SMOTE): Better when you have limited data
+- **Undersampling**: Risk losing information from majority class
+
+---
+
+## 7. Hyperparameter Tuning
+
+### What hyperparameters should I tune?
+
+**Priority order:**
+
+1. **Learning rate** - Most impactful (try: 0.0001, 0.001, 0.01)
+2. **Dropout rate** - For regularisation (try: 0.0, 0.2, 0.3, 0.5)
+3. **L2 strength** - For regularisation (try: 0.0001, 0.001, 0.01)
+4. **Number of neurons** - Architecture (try: 32, 64, 128)
+5. **Batch size** - Training dynamics (try: 32, 64, 128, 256)
+
+### Hold-Out vs K-Fold: When to use which?
+
+| Dataset Size | Method | Why |
+|--------------|--------|-----|
+| < 1,000 | K-Fold (K=5) | Small test sets are unreliable |
+| 1,000 - 10,000 | Either | K-Fold more robust |
+| > 10,000 | Hold-Out | Sufficient data, K-Fold too slow |
+
+### What is Hyperband and when should I use it?
+
+**Hyperband** is an efficient hyperparameter search method:
+
+- Trains many configurations for few epochs
+- Eliminates poor performers early
+- Focuses resources on promising configurations
+
+**Use Hyperband when:**
+- You have many hyperparameters to tune
+- Training is slow
+- Dataset is large (>10,000 samples)
+
+```python
+import keras_tuner as kt
+
+tuner = kt.Hyperband(
+    build_model,
+    objective='val_accuracy',
+    max_epochs=20,
+    factor=3
+)
+tuner.search(X_train, y_train, validation_split=0.1)
 ```
 
 ---
 
-## 3. Training Issues
+## 8. Common Errors
 
-### What if the validation loss doesn't decrease?
+### ValueError: Shapes (X,) and (Y,) are incompatible
 
-**Symptom:** Validation loss stays flat or fluctuates wildly.
-
-**Most likely cause:** Learning rate too high.
-
-**Solution:** Lower the learning rate.
-
-```python
-# Too high (common mistake)
-optimizer = Adam(learning_rate=0.01)
-
-# Better starting point
-optimizer = Adam(learning_rate=0.001)
-
-# If still unstable
-optimizer = Adam(learning_rate=0.0001)
-```
-
-### What if both training and validation loss decrease in a straight line?
-
-**Symptom:** Loss keeps decreasing but never reaches a minimum.
+**Cause:** Mismatch between model output and labels.
 
 **Solutions:**
-1. **Increase learning rate** (training is too slow)
-2. **Increase epochs** until early stopping triggers
-
-### Why is my validation loss lower than training loss?
-
-This can happen when:
-
-1. **Validation set is "easier"** - Contains less diverse/exotic examples
-2. **Dropout effect** - Dropout is active during training but not validation
-3. **Data distribution** - Validation data is closer to the "centre" of the distribution
-
-**Example analogy:** Training set has exotic cats that look like dogs, but validation set has only typical-looking cats and dogs.
-
-### How many epochs do I need?
-
-- **Baseline/SLP:** 50-100 epochs (converges quickly)
-- **Overfitting model:** 150-200 epochs (to clearly show overfitting)
-- **Regularised model:** 100-150 epochs (needs time to converge with dropout)
-
-**Key principle:** Set epochs long enough for early stopping to trigger naturally.
-
----
-
-## 4. Universal ML Workflow
-
-### Step 4: Developing a Model that Does Better than a Baseline
-
-**What is the baseline?**
-
-| Problem Type | Baseline |
-|--------------|----------|
-| Balanced classification | 1/num_classes (e.g., 0.5 for binary, 0.33 for 3-class) |
-| Imbalanced classification | Largest class proportion (e.g., 0.7 if 70% is one class) |
-| Regression | Mean or median of target values |
-
-**First model to try:**
-
-Start with a **Single Layer Perceptron (SLP)** - zero hidden layers:
 
 ```python
+# If using categorical_crossentropy, labels must be one-hot:
+from tensorflow.keras.utils import to_categorical
+y_train_onehot = to_categorical(y_train)
+
+# OR use sparse_categorical_crossentropy with integer labels:
+model.compile(loss='sparse_categorical_crossentropy', ...)
+```
+
+### ValueError: Input 0 is incompatible with layer
+
+**Cause:** Input shape doesn't match your data.
+
+```python
+# Check your data shape
+print(f"X_train shape: {X_train.shape}")  # e.g., (1000, 64)
+
+# Model input_shape should match (exclude batch dimension)
 model = Sequential([
-    Dense(num_classes, activation='softmax', input_shape=(num_features,))
+    Dense(32, activation='relu', input_shape=(64,)),  # Not (1000, 64)!
+    ...
 ])
 ```
 
-**Why SLP?**
-- Mathematically equivalent to Logistic/Linear Regression
-- Very likely to beat the naive baseline
-- With good features, can perform surprisingly well
-- Provides a strong foundation for comparison
+### ResourceExhaustedError: OOM (Out of Memory)
 
-### Step 5: Scaling Up - Developing a Model that Overfits
+**Cause:** Model or batch too large for GPU memory.
 
-**Purpose:** Confirm you have enough model capacity.
+**Solutions:**
+1. Reduce batch size: `batch_size=32` instead of 512
+2. Reduce model size (fewer neurons)
+3. Use CPU: `import os; os.environ['CUDA_VISIBLE_DEVICES'] = '-1'`
 
-**How to create an overfitting model:**
+### My Colab session keeps disconnecting
+
+**Tips:**
+- Save checkpoints: `ModelCheckpoint('model.h5')`
+- Save to Google Drive regularly
+- Keep browser tab active
+- Use smaller batch sizes (faster epochs)
+
+---
+
+## 9. Write-up & Submission
+
+### What should I include in my report?
+
+| Section | Contents |
+|---------|----------|
+| **Introduction** | Problem definition, motivation, dataset description |
+| **Methodology** | Data preprocessing, evaluation protocol, model architecture |
+| **Results** | Training curves, performance metrics, comparison table |
+| **Analysis** | Interpretation of results, why models performed as they did |
+| **Conclusions** | Key findings, limitations, future work |
+| **Code Attribution** | What code was adapted vs original |
+| **References** | Chollet (2021), dataset source, other citations |
+
+### How do I cite/attribute code?
+
+The coursework instruction says: *"reference all code that is not original"*
+
+**Create a Code Attribution table:**
+
+| Component | Source | Adaptation |
+|-----------|--------|------------|
+| TF-IDF vectorisation | scikit-learn | Standard usage |
+| Model architecture | Chollet (2021) Ch.4 | Applied to my dataset |
+| Hyperband tuning | keras-tuner docs | Customised for this problem |
+| Training loop | Course materials | Modified for class weights |
+
+**Mark original contributions:**
+- Novel problem framing
+- Custom analysis
+- Unique experiments
+
+### What format should I submit?
+
+Per the instruction: **Export to HTML only**
 
 ```python
-model = Sequential([
-    Dense(64, activation='relu', input_shape=(num_features,)),
-    Dense(num_classes, activation='softmax')
-])
+# In Colab:
+# 1. Download .ipynb
+# 2. Open in Jupyter
+# 3. File → Export as → HTML
+
+# Or use command line:
+# jupyter nbconvert --to html notebook.ipynb
 ```
 
-**What to look for:**
-- Training loss keeps decreasing
-- Validation loss starts increasing (classic overfitting pattern)
-- This confirms: "We have enough capacity"
+### What are markers looking for?
 
-**Skinny Jean Analogy:**
-> Start with an oversized jean, then shrink it to fit perfectly.
-
-In ML terms: Start with a model that can overfit, then regularise it down.
-
-### Step 6: Regularising Your Model
-
-**Two approaches:**
-
-| Approach | Description |
-|----------|-------------|
-| **Fix architecture, vary settings** | Keep layers/neurons fixed, tune dropout, learning rate, batch size |
-| **Vary both** | Explore different architectures AND settings |
-
-**Regularisation techniques for Dense networks:**
-
-| Technique | Effect |
-|-----------|--------|
-| **Dropout** | Randomly drops neurons during training |
-| **L2 (Weight Decay)** | Penalises large weights |
-| **L1 (Lasso)** | Drives some weights to exactly zero |
-
----
-
-## 5. Hyperparameter Tuning
-
-### What is the purpose of K-Fold and Grid Search?
-
-**Important distinction:**
-- Grid Search + K-Fold → Finds optimal **hyperparameters**
-- Retraining with those hyperparameters → Gives optimal **model**
-
-**Process:**
-1. Use K-Fold + Grid Search on **training data only**
-2. Find best hyperparameters (no validation set used!)
-3. Retrain model with best hyperparameters on full training data
-4. Use validation set **only** for early stopping
-5. Evaluate final model on test set
-
-**Why this matters:**
-- No information leak from validation to training
-- Validation and test performance will be more consistent
-
-### Should I combine train and validation sets for final training?
-
-**No.** You still need validation data for early stopping.
-
-If you combine them:
-- No way to know when to stop training
-- Model will overfit
-
-### When to use Hold-Out vs K-Fold?
-
-| Dataset Size | Recommended | Rationale |
-|--------------|-------------|-----------|
-| < 1,000 | K-Fold (K=5 or 10) | Small hold-out sets have high variance |
-| 1,000 - 10,000 | Either | K-Fold more robust |
-| > 10,000 | Hold-Out | Sufficient data; K-Fold too expensive |
-
----
-
-## 6. Common Questions
-
-### Why shouldn't I use too many neurons?
-
-**The equation analogy:**
-
-```
-2 equations, 4 unknowns → Infinite solutions (overfitting)
-2 equations, 2 unknowns → Exactly one solution (good)
-Many equations, 2 unknowns → Robust solution (best)
-```
-
-**Example:**
-- 500 data points, 30 features
-- 1 hidden layer with 512 neurons
-- Total parameters: ~16,385
-
-This is **32× more parameters than data points**. The model will memorise, not learn.
-
-**Rule:** Keep parameters << data points.
-
-### What models should I explore for the coursework?
-
-**Recommended progression:**
-
-| Model | Architecture | Purpose |
-|-------|--------------|---------|
-| **Baseline (SLP)** | 0 hidden layers | Beat naive baseline |
-| **Overfitting** | 1 hidden layer, 64 neurons | Prove sufficient capacity |
-| **Regularised** | 1 hidden layer, 64 neurons + Dropout + L2 | Optimal model |
-| **Wider** | 1 hidden layer, 128 neurons + Dropout + L2 | Architecture exploration |
-| **Deeper** | 2 hidden layers, 64 each + Dropout + L2 | Architecture exploration |
-| **Narrower** | 1 hidden layer, 32 neurons + Dropout + L2 | Architecture exploration |
-
-### What are the review criteria looking for?
-
-1. **Report structure and quality** - Clear headings, tables, narrative
-2. **Adherence to the deep learning workflow** - Follow Steps 1-6/7
-3. **Systematic investigation** - Not just one model
-4. **Interpretation of results** - Explain *why*, not just *what*
+| Criterion | What They Want |
+|-----------|----------------|
+| Report structure | Clear sections, tables, professional presentation |
+| Workflow adherence | Follow the 7 steps systematically |
+| Systematic investigation | Multiple models compared fairly |
+| Interpretation | Explain *why*, not just *what* |
+| Code attribution | Honest about what's original vs adapted |
 
 **For additional credit:**
-- Extensive experimentation
-- Understanding beyond the syllabus
+- Extensive experimentation beyond the minimum
+- Insights that show deep understanding
 
 ---
 
-## Quick Reference
+## 10. Quick Reference
 
-### Recommended Starting Configuration
+### Recommended Starting Point
 
 ```python
-# Architecture
-hidden_layers = 1
-hidden_neurons = 64
-dropout_rate = 0.3
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.regularizers import l2
 
-# Training
-batch_size = 32 or 64
-learning_rate = 0.001
-epochs = 150
+model = Sequential([
+    Dense(64, activation='relu',
+          kernel_regularizer=l2(0.001),
+          input_shape=(num_features,)),
+    Dropout(0.3),
+    Dense(num_classes, activation='softmax')
+])
 
-# Regularisation
-l2_strength = 0.001
+model.compile(
+    optimizer=Adam(learning_rate=0.001),
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+history = model.fit(
+    X_train, y_train,
+    validation_split=0.1,
+    epochs=150,
+    batch_size=64,
+    class_weight=class_weight,  # If imbalanced
+    verbose=1
+)
 ```
 
-### Hyperparameter Search Ranges
+### Hyperparameter Cheat Sheet
 
-| Hyperparameter | Range |
-|----------------|-------|
-| Learning rate | 1e-4 to 1e-2 |
-| Dropout | 0.0 to 0.5 |
-| L2 regularisation | 1e-5 to 1e-2 |
-| Batch size | 32, 64, 128, 256, 512 |
-| Hidden neurons | 16, 32, 64, 128 |
+| Parameter | Start With | Range to Try |
+|-----------|------------|--------------|
+| Learning rate | 0.001 | 0.0001 - 0.01 |
+| Dropout | 0.3 | 0.0 - 0.5 |
+| L2 regularisation | 0.001 | 0.00001 - 0.01 |
+| Batch size | 64 | 32 - 512 |
+| Hidden neurons | 64 | 16 - 128 |
+| Hidden layers | 1 | 0 - 2 |
+
+### Decision Flowchart
+
+```
+Is model learning? (training loss decreasing)
+├── No → Lower learning rate OR simplify model
+└── Yes → Is it overfitting? (val loss increasing)
+    ├── Yes → Add dropout/L2 OR reduce model size
+    └── No → Is performance good enough?
+        ├── No → Try different architecture
+        └── Yes → Done! Evaluate on test set
+```
 
 ---
 
 ## References
 
 - Chollet, F. (2021) *Deep Learning with Python*. 2nd edn. Manning Publications.
-- Heaton, J. (2008) *Introduction to Neural Networks with Java*. Heaton Research.
+- Keras Documentation: https://keras.io/
+- scikit-learn Documentation: https://scikit-learn.org/
 
 ---
 
-*Last updated: 2024*
+*Last updated: January 2025*
