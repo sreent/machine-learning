@@ -174,12 +174,46 @@ model.compile(
 )
 ```
 
+### I can't see a proper learning curve (loss looks flat or chaotic)
+
+**This is a common issue!** A good learning curve should show a smooth, gradual decrease in loss. If you can't see this pattern, the learning rate is usually the problem.
+
+**What a good learning curve looks like:**
+- Starts high, decreases smoothly
+- Eventually plateaus or (for overfitting) validation loss starts increasing
+- You can clearly see the training progression
+
+**If your curve looks flat or chaotic:**
+
+```python
+# Start with a LOW learning rate to see the curve clearly
+model.compile(
+    optimizer=Adam(learning_rate=0.0001),  # Start low
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Train for enough epochs to see the pattern
+history = model.fit(X_train, y_train, epochs=150, ...)
+```
+
+**Learning rate adjustment guide:**
+
+| What You See | Problem | Solution |
+|--------------|---------|----------|
+| Flat line (no learning) | LR too high or too low | Try 0.0001 first |
+| Wild oscillations | LR too high | Reduce by 10× (e.g., 0.01 → 0.001) |
+| Very slow descent | LR too low | Increase by 10× (e.g., 0.0001 → 0.001) |
+| Smooth curve, then plateau | Good! | This is what you want |
+
+**Tip:** Start with `learning_rate=0.0001` to see the curve, then adjust if needed.
+
 ### My loss decreases but very slowly (straight line)
 
 **The model is learning, but too slowly.**
 
 Solutions:
-1. **Increase learning rate** (e.g., 0.001 → 0.01)
+1. **Increase learning rate** (e.g., 0.0001 → 0.001)
 2. **Increase epochs** (e.g., 100 → 300)
 3. **Reduce batch size** (more gradient updates per epoch)
 
