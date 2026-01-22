@@ -408,6 +408,51 @@ tuner = kt.Hyperband(
 tuner.search(X_train, y_train, validation_split=0.1)
 ```
 
+### Hyperband tuned for 20 epochs, but I'm retraining for 150 - won't it overfit?
+
+**Yes, this is a real risk!** Hyperband finds hyperparameters optimal for short training (e.g., 20 epochs). When you retrain for longer (e.g., 150 epochs) without early stopping, the regularisation may be too weak.
+
+**The problem:**
+- Dropout=0.3 prevents overfitting at 20 epochs
+- But at 150 epochs, Dropout=0.3 may not be enough
+- Without early stopping, you can't stop at the optimal point
+
+**Solutions:**
+
+1. **Increase regularisation when retraining:**
+   ```python
+   # If Hyperband found dropout=0.3, try 0.4-0.5 for longer training
+   # If Hyperband found l2=0.001, try 0.005-0.01 for longer training
+   ```
+
+2. **Use validation loss to pick the best epoch manually:**
+   ```python
+   history = model.fit(X_train, y_train, validation_split=0.1, epochs=150, ...)
+
+   # Find epoch with lowest validation loss
+   best_epoch = np.argmin(history.history['val_loss']) + 1
+   print(f"Best epoch: {best_epoch}")
+
+   # Report metrics at that epoch, not the final epoch
+   ```
+
+3. **Set Hyperband max_epochs closer to final training:**
+   ```python
+   tuner = kt.Hyperband(
+       build_model,
+       objective='val_loss',
+       max_epochs=50,  # Closer to final training length
+       factor=3
+   )
+   ```
+
+4. **Monitor and document the overfitting:**
+   - Plot training vs validation loss
+   - Acknowledge in your report that longer training caused some overfitting
+   - This shows understanding of the limitation
+
+**Practical tip:** If your final validation loss is significantly higher than during Hyperband search, increase regularisation strength by 2-5×.
+
 ---
 
 ## 8. Common Errors
