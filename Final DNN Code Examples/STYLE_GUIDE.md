@@ -40,7 +40,7 @@ All notebooks use **only techniques from Chapters 1–4** of *Deep Learning with
 
 ### 1.2 Universal ML Workflow
 
-All notebooks follow the **9-section Universal ML Workflow**:
+All notebooks follow the **7-step Universal ML Workflow** (Chollet, 2021):
 
 1. Defining the problem and assembling a dataset
 2. Choosing a measure of success
@@ -49,8 +49,10 @@ All notebooks follow the **9-section Universal ML Workflow**:
 5. Developing a model that does better than a baseline
 6. Scaling up: developing a model that overfits
 7. Regularising your model and tuning hyperparameters
-8. Results summary
-9. Key takeaways
+
+Each notebook also includes two concluding sections:
+- **Section 8: Results Summary** - Model comparison table
+- **Section 9: Key Takeaways** - Lessons learned and references
 
 ### 1.3 Terminology
 
@@ -574,7 +576,7 @@ Every notebook should cite:
 Use this checklist before finalising any notebook:
 
 ### Structure
-- [ ] Follows Universal ML Workflow (9 sections)
+- [ ] Follows Universal ML Workflow (7 steps + 2 concluding sections)
 - [ ] Has Colab badge at top
 - [ ] Has Learning Objectives
 - [ ] Has Dataset Overview table
