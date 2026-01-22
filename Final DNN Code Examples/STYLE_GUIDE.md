@@ -40,7 +40,7 @@ All notebooks use **only techniques from Chapters 1–4** of *Deep Learning with
 
 ### 1.2 Universal ML Workflow
 
-All notebooks follow the **8-step Universal ML Workflow**:
+All notebooks follow the **9-section Universal ML Workflow**:
 
 1. Defining the problem and assembling a dataset
 2. Choosing a measure of success
@@ -49,7 +49,8 @@ All notebooks follow the **8-step Universal ML Workflow**:
 5. Developing a model that does better than a baseline
 6. Scaling up: developing a model that overfits
 7. Regularising your model and tuning hyperparameters
-8. Results summary and key takeaways
+8. Results summary
+9. Key takeaways
 
 ### 1.3 Terminology
 
@@ -244,14 +245,14 @@ This notebook uses only techniques from **Chapters 1–4** of *Deep Learning wit
 
 ## 4. Narrative Standards
 
-### 10.1 Explanation Depth
+### 4.1 Explanation Depth
 
 Every significant choice must be explained with:
 - **What:** What we're doing
 - **Why:** Why this approach (not just "it's common practice")
 - **Trade-offs:** What we gain and lose
 
-### 10.2 Formatting Conventions
+### 4.2 Formatting Conventions
 
 | Element | Format |
 |---------|--------|
@@ -262,7 +263,7 @@ Every significant choice must be explained with:
 | Comparisons | Tables |
 | Step-by-step processes | Numbered lists |
 
-### 6.3 Blockquote Usage
+### 4.3 Blockquote Usage
 
 Use blockquotes for memorable insights:
 
@@ -270,7 +271,7 @@ Use blockquotes for memorable insights:
 > *"Regularisation adds noise and constraints that slow down learning. In exchange for protection against overfitting, the model needs more iterations to converge."*
 ```
 
-### 5.4 Section Transitions
+### 4.4 Section Transitions
 
 Each section should:
 - Start with a brief explanation of what we're doing and why
@@ -281,7 +282,7 @@ Each section should:
 
 ## 5. Code Standards
 
-### 10.1 Constants and Configuration
+### 5.1 Constants and Configuration
 
 Define all constants at the top of the relevant section:
 
@@ -295,7 +296,7 @@ EPOCHS_BASELINE = 100      # SLP and DNN (no regularisation)
 EPOCHS_REGULARIZED = 150   # DNN with Dropout + L2
 ```
 
-### 10.2 Comment Standards
+### 5.2 Comment Standards
 
 ```python
 # Good: Explains WHY
@@ -305,7 +306,7 @@ EPOCHS_REGULARIZED = 150   # DNN with Dropout + L2
 # Set epochs to 150
 ```
 
-### 6.3 Magic Number Guidelines
+### 5.3 Magic Number Guidelines
 
 | Type | Guideline |
 |------|-----------|
@@ -357,7 +358,7 @@ preds_test = model.predict(X_test, verbose=0).argmax(axis=1)
 
 ## 6. Design Decision Documentation
 
-### 10.1 Required Design Decisions
+### 6.1 Required Design Decisions
 
 Document these choices in every notebook:
 
@@ -371,7 +372,7 @@ Document these choices in every notebook:
 | **Training** | Batch size, epochs, optimiser |
 | **Imbalance** | Class weights vs SMOTE vs undersampling |
 
-### 10.2 Comparison Table Format
+### 6.2 Comparison Table Format
 
 ```markdown
 #### Why [Choice A] Instead of [Choice B]?
@@ -411,7 +412,7 @@ Per the **Universal ML Workflow**, the goal is to demonstrate that the model *ca
 
 ## 7. Data-Driven Decisions
 
-### 10.1 Standard Thresholds
+### 7.1 Standard Thresholds
 
 Use these thresholds with citations:
 
@@ -421,7 +422,7 @@ Use these thresholds with citations:
 | Accuracy vs F1-Score | > 3:1 imbalance ratio | He and Garcia (2009) |
 | Severe imbalance | > 10:1 ratio | Branco et al. (2016) |
 
-### 10.2 Data-Driven Code Block
+### 7.2 Data-Driven Code Block
 
 ```python
 # =============================================================================
@@ -445,7 +446,7 @@ print(f"Imbalance ratio: {imbalance_ratio:.2f}:1 → {'F1-Score' if use_f1 else 
 
 ## 8. British English Conventions
 
-### 10.1 Spelling
+### 8.1 Spelling
 
 | American (Avoid) | British (Use) |
 |------------------|---------------|
@@ -459,14 +460,14 @@ print(f"Imbalance ratio: {imbalance_ratio:.2f}:1 → {'F1-Score' if use_f1 else 
 | parallelizable | parallelisable |
 | color | colour |
 
-### 10.2 Exceptions
+### 8.2 Exceptions
 
 Keep American spelling for:
 - **API/library names:** `optimizer=`, `regularizers.l2()`, `OPTIMIZER`
 - **Function names:** `TfidfVectorizer`
 - **Error messages from libraries**
 
-### 10.3 Narrative Examples
+### 8.3 Narrative Examples
 
 ```markdown
 # Good
@@ -481,7 +482,7 @@ The model uses **Dropout + L2 regularization** to prevent overfitting.
 
 ## 9. Reference Formatting
 
-### 10.1 Harvard Style
+### 9.1 Harvard Style
 
 Use Harvard referencing for all citations:
 
@@ -495,7 +496,7 @@ Use Harvard referencing for all citations:
 - Kohavi, R. (1995) 'A study of cross-validation and bootstrap for accuracy estimation and model selection', *IJCAI*, 2, pp. 1137–1145.
 ```
 
-### 10.2 In-Text Citations
+### 9.2 In-Text Citations
 
 ```markdown
 # Parenthetical
@@ -505,7 +506,7 @@ This threshold is a practical guideline (He and Garcia, 2009).
 He and Garcia (2009) suggest using F1-Score for imbalanced data.
 ```
 
-### 10.3 Required References
+### 9.3 Required References
 
 Every notebook should cite:
 - Chollet (2021) - for technique scope and workflow
@@ -573,7 +574,7 @@ Every notebook should cite:
 Use this checklist before finalising any notebook:
 
 ### Structure
-- [ ] Follows Universal ML Workflow (8 sections)
+- [ ] Follows Universal ML Workflow (9 sections)
 - [ ] Has Colab badge at top
 - [ ] Has Learning Objectives
 - [ ] Has Dataset Overview table
