@@ -453,6 +453,69 @@ tuner.search(X_train, y_train, validation_split=0.1)
 
 **Practical tip:** If your final validation loss is significantly higher than during Hyperband search, increase regularisation strength by 2-5×.
 
+### Can I make all hyperparameter configurations train for the full epochs?
+
+**Yes! Use RandomSearch or GridSearch instead of Hyperband.**
+
+The key difference:
+- **Hyperband:** Uses early stopping internally to discard poor configurations quickly
+- **RandomSearch/GridSearch:** Trains every configuration for the full specified epochs
+
+**RandomSearch example (recommended):**
+
+```python
+import keras_tuner as kt
+
+def build_model(hp):
+    model = Sequential()
+    l2_reg = hp.Float('l2_reg', 1e-5, 1e-2, sampling='log')
+    dropout = hp.Float('dropout', 0.0, 0.5, step=0.1)
+    lr = hp.Float('lr', 1e-4, 1e-2, sampling='log')
+
+    model.add(Dense(64, activation='relu',
+                    kernel_regularizer=l2(l2_reg),
+                    input_shape=(num_features,)))
+    model.add(Dropout(dropout))
+    model.add(Dense(num_classes, activation='softmax'))
+
+    model.compile(optimizer=Adam(learning_rate=lr),
+                  loss='categorical_crossentropy',
+                  metrics=['accuracy'])
+    return model
+
+# RandomSearch trains ALL configurations for full epochs
+tuner = kt.RandomSearch(
+    build_model,
+    objective='val_loss',
+    max_trials=15,  # Number of configurations to try
+    directory='tuning_dir',
+    project_name='my_model',
+    overwrite=True
+)
+
+tuner.search(X_train, y_train,
+             validation_split=0.1,
+             epochs=150,  # ALL configs train for 150 epochs
+             batch_size=64,
+             class_weight=class_weight)
+
+# Get best hyperparameters
+best_hps = tuner.get_best_hyperparameters()[0]
+print(f"Best L2: {best_hps.get('l2_reg')}")
+print(f"Best Dropout: {best_hps.get('dropout')}")
+print(f"Best LR: {best_hps.get('lr')}")
+```
+
+**When to use which:**
+
+| Method | Best For | Trade-off |
+|--------|----------|-----------|
+| **RandomSearch** | Full epoch training, moderate search space | Slower but more reliable |
+| **GridSearch** | Small search space, exhaustive search | Can be very slow |
+| **Hyperband** | Large search space, fast exploration | May not find optimal long-training configs |
+
+**Tip:** RandomSearch with 15-20 trials and full training epochs often gives more reliable results than Hyperband for coursework projects where you need to train for many epochs without early stopping.
+
 ---
 
 ## 8. Common Errors
