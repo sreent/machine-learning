@@ -408,6 +408,114 @@ tuner = kt.Hyperband(
 tuner.search(X_train, y_train, validation_split=0.1)
 ```
 
+### Hyperband tuned for 20 epochs, but I'm retraining for 150 - won't it overfit?
+
+**Yes, this is a real risk!** Hyperband finds hyperparameters optimal for short training (e.g., 20 epochs). When you retrain for longer (e.g., 150 epochs) without early stopping, the regularisation may be too weak.
+
+**The problem:**
+- Dropout=0.3 prevents overfitting at 20 epochs
+- But at 150 epochs, Dropout=0.3 may not be enough
+- Without early stopping, you can't stop at the optimal point
+
+**Solutions:**
+
+1. **Increase regularisation when retraining:**
+   ```python
+   # If Hyperband found dropout=0.3, try 0.4-0.5 for longer training
+   # If Hyperband found l2=0.001, try 0.005-0.01 for longer training
+   ```
+
+2. **Use validation loss to pick the best epoch manually:**
+   ```python
+   history = model.fit(X_train, y_train, validation_split=0.1, epochs=150, ...)
+
+   # Find epoch with lowest validation loss
+   best_epoch = np.argmin(history.history['val_loss']) + 1
+   print(f"Best epoch: {best_epoch}")
+
+   # Report metrics at that epoch, not the final epoch
+   ```
+
+3. **Set Hyperband max_epochs closer to final training:**
+   ```python
+   tuner = kt.Hyperband(
+       build_model,
+       objective='val_loss',
+       max_epochs=50,  # Closer to final training length
+       factor=3
+   )
+   ```
+
+4. **Monitor and document the overfitting:**
+   - Plot training vs validation loss
+   - Acknowledge in your report that longer training caused some overfitting
+   - This shows understanding of the limitation
+
+**Practical tip:** If your final validation loss is significantly higher than during Hyperband search, increase regularisation strength by 2-5×.
+
+### Can I make all hyperparameter configurations train for the full epochs?
+
+**Yes! Use RandomSearch or GridSearch instead of Hyperband.**
+
+The key difference:
+- **Hyperband:** Uses early stopping internally to discard poor configurations quickly
+- **RandomSearch/GridSearch:** Trains every configuration for the full specified epochs
+
+**RandomSearch example (recommended):**
+
+```python
+import keras_tuner as kt
+
+def build_model(hp):
+    model = Sequential()
+    l2_reg = hp.Float('l2_reg', 1e-5, 1e-2, sampling='log')
+    dropout = hp.Float('dropout', 0.0, 0.5, step=0.1)
+    lr = hp.Float('lr', 1e-4, 1e-2, sampling='log')
+
+    model.add(Dense(64, activation='relu',
+                    kernel_regularizer=l2(l2_reg),
+                    input_shape=(num_features,)))
+    model.add(Dropout(dropout))
+    model.add(Dense(num_classes, activation='softmax'))
+
+    model.compile(optimizer=Adam(learning_rate=lr),
+                  loss='categorical_crossentropy',
+                  metrics=['accuracy'])
+    return model
+
+# RandomSearch trains ALL configurations for full epochs
+tuner = kt.RandomSearch(
+    build_model,
+    objective='val_loss',
+    max_trials=15,  # Number of configurations to try
+    directory='tuning_dir',
+    project_name='my_model',
+    overwrite=True
+)
+
+tuner.search(X_train, y_train,
+             validation_split=0.1,
+             epochs=150,  # ALL configs train for 150 epochs
+             batch_size=64,
+             class_weight=class_weight)
+
+# Get best hyperparameters
+best_hps = tuner.get_best_hyperparameters()[0]
+print(f"Best L2: {best_hps.get('l2_reg')}")
+print(f"Best Dropout: {best_hps.get('dropout')}")
+print(f"Best LR: {best_hps.get('lr')}")
+```
+
+**When to use which:**
+
+| Method | Best For | Trade-off |
+|--------|----------|-----------|
+| **RandomSearch** | Full epoch training, moderate search space | Slower but more reliable |
+| **GridSearch** | Small search space, exhaustive search | Can be very slow |
+| **Hyperband** | Large search space, fast exploration | May not find optimal long-training configs |
+
+**Tip:** RandomSearch with 15-20 trials and full training epochs often gives more reliable results than Hyperband for coursework projects where you need to train for many epochs without early stopping.
+
 ---
 
 ## 8. Common Errors
